@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Order
+from orders.models import Order
 from .serializers import StoreOrderSerializer, StoreProfileSerializer
 
 # Endpoint to view client orders
