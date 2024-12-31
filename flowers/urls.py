@@ -29,6 +29,8 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="support@example.com"),
         license=openapi.License(name="BSD License"),
     ),
+    url='https://api.floraflow.tech',
+    patterns=[path('api/', include('api.urls')), ],
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
