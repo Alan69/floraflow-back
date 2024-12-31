@@ -14,4 +14,4 @@ class StoreOrderSerializer(serializers.ModelSerializer):
 class StoreProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreProfile
-        fields = ['uuid', 'logo', 'address', 'city', 'phone', 'instagram_link']
+        fields = ['uuid', 'logo', 'address', 'phone', 'instagram_link']
