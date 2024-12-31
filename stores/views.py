@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from orders.models import Order
 from .serializers import StoreOrderSerializer, StoreProfileSerializer
+from rest_framework.exceptions import NotAuthenticated
 
 # Endpoint to view client orders
 class StoreOrdersView(generics.ListAPIView):
@@ -19,7 +20,15 @@ class StoreOrderUpdateView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # Ensure only the logged-in store can update their orders
+    # Short-circuit during Swagger schema generation
+        if getattr(self, 'swagger_fake_view', False):
+            return Order.objects.none()  # Return an empty queryset for Swagger
+
+        # Check if the user is authenticated
+        if not self.request.user.is_authenticated:
+            raise NotAuthenticated("You must be logged in to access this endpoint.")
+
+        # Return orders for the authenticated store user
         return Order.objects.filter(store=self.request.user)
 
 # Endpoint to update store profile
