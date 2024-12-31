@@ -5,8 +5,8 @@ from users.models import CustomUser
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id', 'flower_data', 'price', 'status', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'status', 'created_at', 'updated_at']
+        fields = ['uuid', 'flower_data', 'price', 'status', 'created_at', 'updated_at']
+        read_only_fields = ['uuid', 'status', 'created_at', 'updated_at']
 
     def create(self, validated_data):
         client = self.context['request'].user
@@ -16,4 +16,4 @@ class OrderSerializer(serializers.ModelSerializer):
 class OrderHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id', 'flower_data', 'price', 'status', 'created_at', 'updated_at']
+        fields = ['uuid', 'flower_data', 'price', 'status', 'created_at', 'updated_at']

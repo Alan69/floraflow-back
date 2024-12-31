@@ -8,10 +8,10 @@ class StoreOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'client_name', 'flower_data', 'price', 'status', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'client_name', 'flower_data', 'created_at', 'updated_at']
+        fields = ['uuid', 'client_name', 'flower_data', 'price', 'status', 'created_at', 'updated_at']
+        read_only_fields = ['uuid', 'client_name', 'flower_data', 'created_at', 'updated_at']
 
 class StoreProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreProfile
-        fields = ['id', 'logo', 'address', 'city', 'phone', 'instagram_link']
+        fields = ['uuid', 'logo', 'address', 'city', 'phone', 'instagram_link']
