@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_app
+    command: gunicorn flowers.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_SETTINGS_MODULE=flowers.settings
+      - POSTGRES_NAME=flowers
+      - POSTGRES_USER=flowers
+      - POSTGRES_PASSWORD=flowers
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=flowers
+      - POSTGRES_PASSWORD=flowers
+      - POSTGRES_DB=flowers
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - media_volume:/app/media
+
+volumes:
+  postgres_data:
+  media_volume:
