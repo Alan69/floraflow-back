@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-6$)5z9as%zsqb+j@%sjh=n1v8ld^ikphxdpfb&6mh3@lhk^xxm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'django']
+ALLOWED_HOSTS = ['api.floraflow.tech', '127.0.0.1', 'localhost', 'django']
+
+CSRF_TRUSTED_ORIGINS = ['https://api.floraflow.tech']
 
 # Application definition
 
