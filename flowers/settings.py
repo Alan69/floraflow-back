@@ -26,9 +26,29 @@ SECRET_KEY = 'django-insecure-6$)5z9as%zsqb+j@%sjh=n1v8ld^ikphxdpfb&6mh3@lhk^xxm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api.floraflow.tech', '127.0.0.1', 'localhost', 'django']
+ALLOWED_HOSTS = ['api.floraflow.tech', 'www.api.floraflow.tech', '127.0.0.1', 'localhost', 'django']
 
-CSRF_TRUSTED_ORIGINS = ['https://api.floraflow.tech']
+SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
+SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access to the cookie
+SESSION_COOKIE_SECURE = True  # Use True if using HTTPS
+SESSION_SAVE_EVERY_REQUEST = True  # Save the session to the database on every request
+
+# Custom cookie settings
+TEST_COOKIE_NAME = 'test_responses'
+TEST_COOKIE_AGE = 1209600  # 2 weeks in seconds
+TEST_COOKIE_HTTPONLY = True  # Prevent JavaScript access to the cookie
+TEST_COOKIE_SECURE = True  # Use True if using HTTPS
+
+# Security settings
+CSRF_COOKIE_SECURE = True  # Use True if using HTTPS
+CSRF_COOKIE_HTTPONLY = True  # Prevent JavaScript access to the CSRF cookie
+CSRF_COOKIE_AGE = 31449600  # 1 year in seconds
+
+CSRF_TRUSTED_ORIGINS = ['https://api.floraflow.tech', 'https://www.api.floraflow.tech']
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
