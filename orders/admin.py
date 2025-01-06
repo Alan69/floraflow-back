@@ -11,6 +11,6 @@ class OrderAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('uuid', 'client', 'store', 'flower_data', 'price', 'status', 'created_at', 'updated_at')
+            'fields': ('client', 'store', 'flower_data', 'price', 'status', 'created_at', 'updated_at')
         }),
     )
