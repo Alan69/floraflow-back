@@ -6,8 +6,8 @@ import os
 from PIL import Image, ImageOps
 
 def user_directory_path_profile(instance, filename):
-    # файл будет загружен в MEDIA_ROOT/user_<id>/<filename>
-    profile_pic_name = 'user_{0}/profile.jpg'.format(instance.user.id)
+    # файл будет загружен в MEDIA_ROOT/user_<uuid>/<filename>
+    profile_pic_name = 'user_{0}/profile.jpg'.format(instance.user.uuid)
     full_path = os.path.join(settings.MEDIA_ROOT, profile_pic_name)
 
     if os.path.exists(full_path):
