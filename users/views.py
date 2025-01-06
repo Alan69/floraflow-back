@@ -5,6 +5,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from rest_framework.views import APIView
+from stores.models import Price
 from .serializers import (
     UserRegistrationSerializer,
     UserProfileSerializer,
@@ -96,3 +98,27 @@ class UserChangePasswordView(generics.UpdateAPIView):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+class AcceptPriceView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        price_id = kwargs.get('price_id')  # Extract the price ID from the URL
+        try:
+            price = Price.objects.get(uuid=price_id, is_accepted=False)
+        except Price.DoesNotExist:
+            return Response({"error": "Price proposal not found or already accepted."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Ensure the request user is the client associated with the order
+        if request.user != price.order.client:
+            return Response({"error": "You do not have permission to accept this price."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Mark the price as accepted
+        price.is_accepted = True
+        price.save()
+
+        # Update the order's price
+        price.order.price = price.proposed_price
+        price.order.save()
+
+        return Response({"detail": "Price accepted successfully."}, status=status.HTTP_200_OK)
