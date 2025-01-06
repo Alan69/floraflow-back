@@ -13,6 +13,7 @@ from .serializers import (
     UserChangePasswordSerializer,
     CustomTokenObtainPairSerializer
 )
+from stores.serializers import PriceSerializer
 
 class UserRegistrationView(generics.CreateAPIView):
     """Endpoint for user registration."""
@@ -122,3 +123,22 @@ class AcceptPriceView(APIView):
         price.order.save()
 
         return Response({"detail": "Price accepted successfully."}, status=status.HTTP_200_OK)
+    
+class UserProposedPriceListView(generics.ListAPIView):
+    """View to list all proposed prices for the current user."""
+    serializer_class = PriceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # If the user is a store, return prices they proposed
+        if user.user_type == 'store':
+            return Price.objects.filter(order__store=user)
+
+        # If the user is a client, return prices proposed for their orders
+        elif user.user_type == 'client':
+            return Price.objects.filter(order__client=user)
+
+        # Otherwise, return an empty queryset (e.g., for admins or invalid types)
+        return Price.objects.none()

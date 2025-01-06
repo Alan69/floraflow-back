@@ -8,6 +8,7 @@ from users.views import (
     UserChangePasswordView,
     CustomTokenObtainPairView,
     AcceptPriceView,
+    UserProposedPriceListView,
 )
 
 from orders.views import (
@@ -33,14 +34,15 @@ urlpatterns = [
     path('password/change/', UserChangePasswordView.as_view(), name='change_password'),
     path('me/', UserProfileView.as_view(), name='user_profile'),
     path('prices/<uuid:price_id>/accept/', AcceptPriceView.as_view(), name='accept-price'),
+    path('client/proposed-prices/', UserProposedPriceListView.as_view(), name='user-propose-prices'),
 
     # stores
-    path('store-orders/', StoreOrdersView.as_view(), name='store_orders'),
+    path('store/orders/', StoreOrdersView.as_view(), name='store_orders'),
     path('store/propose-price/<uuid:order_id>/', StoreOrderUpdateView.as_view(), name='propose-price'),
     path('store-profile/', StoreProfileUpdateView.as_view(), name='store_profile_update'),
 
     # orders
     path('order/', OrderCreateView.as_view(), name='order_create'),
     path('order-history/', OrderHistoryView.as_view(), name='order_history'),
-    path('profile/', ClientProfileUpdateView.as_view(), name='profile_update'),
+    # path('profile/', ClientProfileUpdateView.as_view(), name='profile_update'),
 ]
