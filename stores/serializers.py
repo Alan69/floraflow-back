@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from orders.models import Order
 from .models import StoreProfile, Price
-from users.models import CustomUser
 
 class StoreOrderSerializer(serializers.ModelSerializer):
     client_name = serializers.CharField(source='client.username', read_only=True)
@@ -23,5 +22,5 @@ class StoreProfileSerializer(serializers.ModelSerializer):
 class PriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Price
-        fields = ['uuid', 'order', 'proposed_price', 'is_accepted', 'created_at', 'updated_at']
+        fields = ['uuid', 'proposed_price', 'is_accepted', 'created_at', 'updated_at']
         read_only_fields = ['uuid', 'is_accepted', 'created_at', 'updated_at']
