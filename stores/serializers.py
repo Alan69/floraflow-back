@@ -10,7 +10,7 @@ class StoreOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['uuid', 'client_name', 'flower_data', 'price', 'status', 'created_at', 'updated_at', 'prices']
-        read_only_fields = ['uuid', 'client_name', 'flower_data', 'created_at', 'updated_at', 'price']
+        read_only_fields = ['uuid', 'client_name', 'flower_data', 'status', 'created_at', 'updated_at']
 
     def get_prices(self, obj):
         return PriceSerializer(obj.prices.all(), many=True).data
