@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from orders.models import Order
 from .serializers import StoreOrderSerializer, StoreProfileSerializer
 from rest_framework.exceptions import NotAuthenticated
+from rest_framework.exceptions import PermissionDenied
 
 # Endpoint to view client orders
 class StoreOrdersView(generics.ListAPIView):
@@ -37,5 +38,12 @@ class StoreProfileUpdateView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
+        # Check if the logged-in user is of type 'store'
+        if self.request.user.user_type != 'store':
+            raise PermissionDenied("You do not have permission to access this resource.")
+
         # Retrieve the store profile linked to the logged-in user
-        return self.request.user.store_profile
+        try:
+            return self.request.user.store_profile
+        except AttributeError:
+            raise PermissionDenied("No store profile is associated with this user.")
