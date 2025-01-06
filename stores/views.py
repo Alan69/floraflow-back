@@ -2,9 +2,10 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from orders.models import Order
-from .serializers import StoreOrderSerializer, StoreProfileSerializer
+from .serializers import StoreOrderSerializer, StoreProfileSerializer, PriceSerializer
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.exceptions import PermissionDenied
+from .models import Price
 
 # Endpoint to view client orders
 class StoreOrdersView(generics.ListAPIView):
@@ -16,38 +17,45 @@ class StoreOrdersView(generics.ListAPIView):
         return Order.objects.filter(store=self.request.user).order_by('-created_at')
 
 # Endpoint to update order price or send offers
-class StoreOrderUpdateView(generics.UpdateAPIView):
-    serializer_class = StoreOrderSerializer
+class StoreOrderUpdateView(generics.CreateAPIView):
+    """View for store users to propose a price for an order."""
+    serializer_class = PriceSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        # Short-circuit during Swagger schema generation
-        if getattr(self, 'swagger_fake_view', False):
-            return Order.objects.none()  # Return an empty queryset for Swagger
-
-        # Check if the user is authenticated
-        if not self.request.user.is_authenticated:
-            raise NotAuthenticated("You must be logged in to access this endpoint.")
+    def create(self, request, *args, **kwargs):
+        # Ensure the user is authenticated
+        if not request.user.is_authenticated:
+            raise NotAuthenticated("You must be logged in to perform this action.")
 
         # Ensure the user is a store
-        if self.request.user.user_type != 'store':
-            raise ValidationError("Only store users can update orders.")
+        if request.user.user_type != 'store':
+            raise ValidationError("Only store users can propose prices.")
 
-        # Return orders for the authenticated store user
-        return Order.objects.filter(store=self.request.user)
+        # Get the `order_id` from the URL
+        order_id = kwargs.get('order_id')
 
-    def update(self, request, *args, **kwargs):
-        order = self.get_object()
+        # Validate if the order exists and belongs to the store
+        try:
+            order = Order.objects.get(uuid=order_id, store=request.user)
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found or not associated with your store."}, status=status.HTTP_404_NOT_FOUND)
 
         # Extract the proposed price from the request data
         proposed_price = request.data.get('proposed_price')
         if not proposed_price:
             return Response({"error": "Proposed price is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create a new Price object
+        # Create the Price object
         price = Price.objects.create(order=order, proposed_price=proposed_price)
 
-        return Response({"detail": "Price proposed successfully.", "price_id": price.uuid}, status=status.HTTP_201_CREATED)
+        # Return a success response
+        return Response(
+            {
+                "detail": "Price proposed successfully.",
+                "price": PriceSerializer(price).data,
+            },
+            status=status.HTTP_201_CREATED,
+        )
 
 # Endpoint to update store profile
 class StoreProfileUpdateView(generics.RetrieveUpdateAPIView):

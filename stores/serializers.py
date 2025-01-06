@@ -24,4 +24,4 @@ class PriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Price
         fields = ['uuid', 'order', 'proposed_price', 'is_accepted', 'created_at', 'updated_at']
-        read_only_fields = ['uuid', 'created_at', 'updated_at']
+        read_only_fields = ['uuid', 'is_accepted', 'created_at', 'updated_at']

@@ -36,7 +36,7 @@ urlpatterns = [
 
     # stores
     path('store-orders/', StoreOrdersView.as_view(), name='store_orders'),
-    path('store-order/<uuid:pk>/', StoreOrderUpdateView.as_view(), name='store_order_update'),
+    path('store/propose-price/<uuid:order_id>/', StoreOrderUpdateView.as_view(), name='propose-price'),
     path('store-profile/', StoreProfileUpdateView.as_view(), name='store_profile_update'),
 
     # orders
