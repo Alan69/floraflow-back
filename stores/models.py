@@ -10,9 +10,19 @@ class StoreProfile(models.Model):
     logo = models.ImageField(upload_to='store_logos/', blank=True, null=True)
     address = models.TextField()
     instagram_link = models.URLField(blank=True, null=True)
+    twogis = models.URLField(blank=True, null=True)
+    whatsapp_number = status = models.CharField(max_length=20, blank=True, null=True)
+    average_rating = models.FloatField(default=0.0)
 
     def __str__(self):
         return self.user.email
+    
+    def update_average_rating(self):
+        from stores.models import Order  # Avoid circular import
+        # Calculate the average rating for the store's completed orders
+        result = Order.objects.filter(store=self.user, rating__isnull=False).aggregate(models.Avg('rating'))
+        self.average_rating = result['rating__avg'] or 0.0  # Default to 0.0 if no ratings
+        self.save()
 
 class Price(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

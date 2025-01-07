@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  django:
+  web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: django_app
+    container_name: web
     command: gunicorn flowers.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/app
@@ -13,6 +13,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - redis
     environment:
       - DJANGO_SETTINGS_MODULE=flowers.settings
       - POSTGRES_NAME=flowers
@@ -20,6 +21,27 @@ services:
       - POSTGRES_PASSWORD=flowers
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery
+    command: celery -A flowers worker --loglevel=info
+    depends_on:
+      - web
+      - redis
+    environment:
+      - DJANGO_SETTINGS_MODULE=flowers.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    volumes:
+      - .:/app
+
+  redis:
+    image: redis:6
+    container_name: redis
+    ports:
+      - "6379:6379"
 
   db:
     image: postgres:13
@@ -42,7 +64,7 @@ services:
       - "8080:80"  # Map port 80 in the container to port 8080 on the host
       - "443:443"
     depends_on:
-      - django
+      - web
 
 volumes:
   postgres_data:

@@ -28,3 +28,7 @@ uritemplate==4.1.1
 whitenoise==6.8.2
 django-jazzmin==3.0.1
 django-filter==24.3
+celery
+redis
+django-celery-beat
+django-celery-results

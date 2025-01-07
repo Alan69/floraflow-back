@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-6$)5z9as%zsqb+j@%sjh=n1v8ld^ikphxdpfb&6mh3@lhk^xxm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api.floraflow.tech', 'www.api.floraflow.tech', '127.0.0.1', 'localhost', 'django']
+ALLOWED_HOSTS = ['api.floraflow.tech', 'www.api.floraflow.tech', '127.0.0.1', 'localhost', 'web']
 
 SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
 SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access to the cookie
@@ -236,7 +236,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django': {
+        'web': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
@@ -270,3 +270,14 @@ JAZZMIN_SETTINGS = {
     "navigation_expanded": True,  # Expand sidebar navigation by default
     "related_modal_active": True,  # Enable modal dialogs for related fields
 }
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+# Celery Results Backend (for storing task results)
+CELERY_RESULT_BACKEND = 'django-db'
+
+# Optional: Timezone settings for Celery
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = True
