@@ -20,11 +20,3 @@ class OrderHistoryView(generics.ListAPIView):
 
     def get_queryset(self):
         return Order.objects.filter(client=self.request.user).order_by('-created_at')
-
-# Endpoint for updating user profile
-class ClientProfileUpdateView(generics.RetrieveUpdateAPIView):
-    serializer_class = UserProfileSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user

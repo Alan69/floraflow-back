@@ -14,6 +14,10 @@ from .serializers import (
     CustomTokenObtainPairSerializer
 )
 from stores.serializers import PriceSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+from rest_framework.pagination import PageNumberPagination
+from .pagination import CustomPagination
 
 class UserRegistrationView(generics.CreateAPIView):
     """Endpoint for user registration."""
@@ -128,6 +132,11 @@ class UserProposedPriceListView(generics.ListAPIView):
     """View to list all proposed prices for the current user."""
     serializer_class = PriceSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
+    filter_backends = [DjangoFilterBackend, OrderingFilter]  # Add filtering and ordering backends
+    filterset_fields = ['is_accepted', 'order__uuid']  # Fields you want to filter by
+    ordering_fields = ['created_at', 'updated_at', 'proposed_price']  # Fields you can order by
+    ordering = ['-created_at']  # Default ordering
 
     def get_queryset(self):
         user = self.request.user

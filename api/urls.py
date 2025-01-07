@@ -13,14 +13,14 @@ from users.views import (
 
 from orders.views import (
     OrderCreateView, 
-    OrderHistoryView, 
-    ClientProfileUpdateView
+    OrderHistoryView,
 )
 
 from stores.views import ( 
     StoreOrdersView, 
     StoreOrderUpdateView, 
-    StoreProfileUpdateView )
+    StoreProfileUpdateView 
+)
 
 router = DefaultRouter()
 
@@ -41,8 +41,7 @@ urlpatterns = [
     path('store/propose-price/<uuid:order_id>/', StoreOrderUpdateView.as_view(), name='propose-price'),
     path('store-profile/', StoreProfileUpdateView.as_view(), name='store_profile_update'),
 
-    # orders
+    # user orders
     path('order/', OrderCreateView.as_view(), name='order_create'),
     path('order-history/', OrderHistoryView.as_view(), name='order_history'),
-    # path('profile/', ClientProfileUpdateView.as_view(), name='profile_update'),
 ]
