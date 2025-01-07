@@ -8,12 +8,13 @@ from users.views import (
     UserChangePasswordView,
     CustomTokenObtainPairView,
     AcceptPriceView,
-    UserProposedPriceListView,
+    UserProposedPriceListView
 )
 
 from orders.views import (
     OrderCreateView, 
     OrderHistoryView,
+    RateStoreView
 )
 
 from stores.views import ( 
@@ -44,4 +45,5 @@ urlpatterns = [
     # user orders
     path('order/', OrderCreateView.as_view(), name='order_create'),
     path('order-history/', OrderHistoryView.as_view(), name='order_history'),
+    path('order/<uuid:pk>/rate/', RateStoreView.as_view(), name='rate-store'),
 ]

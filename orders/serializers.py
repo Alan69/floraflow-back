@@ -17,3 +17,19 @@ class OrderHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['uuid', 'flower_data', 'price', 'status', 'created_at', 'updated_at']
+
+class OrderRatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['uuid', 'rating']
+        read_only_fields = ['uuid']
+
+    def validate_rating(self, value):
+        if value < 1 or value > 5:
+            raise serializers.ValidationError("Rating must be between 1 and 5.")
+        return value
+
+    def update(self, instance, validated_data):
+        if instance.status != 'completed':
+            raise serializers.ValidationError("You can only rate a store for completed orders.")
+        return super().update(instance, validated_data)
