@@ -17,7 +17,8 @@ class StoreOrderSerializer(serializers.ModelSerializer):
 class StoreProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreProfile
-        fields = ['uuid', 'logo', 'address', 'instagram_link']
+        fields = ['uuid', 'store_name', 'logo', 'address', 'instagram_link', 'twogis', 'whatsapp_number', 'average_rating']
+        read_only_fields = ['uuid', 'average_rating', 'created_at', 'updated_at']
 
 class PriceSerializer(serializers.ModelSerializer):
     class Meta:
