@@ -36,7 +36,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         """Return the full URL for the profile picture."""
         if obj.profile_picture:
             # Build the full URL using Cloudinary utilities
-            return f"https://res.cloudinary.com/your-cloud-name/{obj.profile_picture}"
+            return f"https://res.cloudinary.com/dwbv1fvgp/image/upload/v1736420569/{obj.profile_picture}"
         return None  # Return None if no picture is uploaded
 
 
