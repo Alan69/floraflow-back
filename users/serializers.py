@@ -26,7 +26,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for retrieving and updating user profile."""
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'phone', 'user_type', 'city', 'picture']
+        fields = ['email', 'first_name', 'last_name', 'phone', 'user_type', 'city', 'profile_picture']
         read_only_fields = ['email']  # Prevent updating email and user type
 
 
