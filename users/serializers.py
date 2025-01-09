@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import CustomUser
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from cloudinary.utils import cloudinary_url
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """Serializer for user registration."""
@@ -24,11 +25,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for retrieving and updating user profile."""
+    profile_picture = serializers.SerializerMethodField()
+
     class Meta:
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'phone', 'user_type', 'city', 'profile_picture']
         read_only_fields = ['email']  # Prevent updating email and user type
-    
+
     def get_profile_picture(self, obj):
         """Return the full URL for the profile picture."""
         if obj.profile_picture:
