@@ -259,7 +259,7 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "Welcome to the Flower App Admin",
     "copyright": "Flower App Ltd",
     "search_model": "users.CustomUser",  # Default search model in the admin
-    "user_avatar": "picture",  # The field on the user model to display an avatar
+    "user_avatar": "profile_picture",  # The field on the user model to display an avatar
     "topmenu_links": [  # Add links to the top menu bar
         {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
         {"model": "users.CustomUser"},
