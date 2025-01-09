@@ -34,7 +34,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('password/change/', UserChangePasswordView.as_view(), name='change_password'),
     path('me/', UserProfileView.as_view(), name='user_profile'),
-    path('prices/<uuid:price_id>/accept/', AcceptPriceView.as_view(), name='accept-price'),
+    path('client/prices/<uuid:price_id>/accept/', AcceptPriceView.as_view(), name='accept-price'),
     path('client/proposed-prices/', UserProposedPriceListView.as_view(), name='user-propose-prices'),
 
     # stores
