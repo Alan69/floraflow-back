@@ -40,10 +40,10 @@ urlpatterns = [
     # stores
     path('store/orders/', StoreOrdersView.as_view(), name='store_orders'),
     path('store/propose-price/<uuid:order_id>/', StoreOrderUpdateView.as_view(), name='propose-price'),
-    path('store-profile/', StoreProfileUpdateView.as_view(), name='store_profile_update'),
+    path('store/profile/', StoreProfileUpdateView.as_view(), name='store_profile_update'),
 
     # user orders
-    path('order/', OrderCreateView.as_view(), name='order_create'),
-    path('order-history/', OrderHistoryView.as_view(), name='order_history'),
-    path('order/<uuid:pk>/rate/', RateStoreView.as_view(), name='rate-store'),
+    path('client/order/', OrderCreateView.as_view(), name='order_create'),
+    path('client/order-history/', OrderHistoryView.as_view(), name='order_history'),
+    path('client/order/<uuid:pk>/rate/', RateStoreView.as_view(), name='rate-store'),
 ]
