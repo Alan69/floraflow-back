@@ -13,7 +13,7 @@ class StoreProfile(models.Model):
     instagram_link = models.URLField(blank=True, null=True)
     twogis = models.URLField(blank=True, null=True)
     whatsapp_number = models.CharField(max_length=20, blank=True, null=True)
-    average_rating = models.FloatField(default=0.0)
+    average_rating = models.FloatField(default=5.0)
 
     def __str__(self):
         return self.user.email
