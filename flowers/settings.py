@@ -65,6 +65,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
+    'cloudinary', 
+    'cloudinary_storage',
 
     'rest_framework',
     'rest_framework_simplejwt',
@@ -162,6 +164,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -282,3 +286,9 @@ CELERY_RESULT_BACKEND = 'django-db'
 # Optional: Timezone settings for Celery
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
+
+CLOUDINARY = {
+    'cloud_name': 'dwbv1fvgp',
+    'api_key': '894533996172461',
+    'api_secret': 'KDVw7pl0OdiUjHnoY3n7Bv5jd90',
+}

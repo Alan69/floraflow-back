@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.conf import settings
 import os
 from PIL import Image, ImageOps
+from cloudinary.models import CloudinaryField
 
 def user_directory_path_profile(instance, filename):
     # файл будет загружен в MEDIA_ROOT/user_<uuid>/<filename>
@@ -61,6 +62,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=15, unique=True, verbose_name="Номер телефона")
     city = models.CharField(max_length=50, choices=CITY_CHOICES, default='Astana', verbose_name='Город')
     picture = models.ImageField(upload_to=user_directory_path_profile, blank=True, null=True, verbose_name='Аватар')
+    profile_picture = CloudinaryField('profile_picture', blank=True, null=True, verbose_name='Аватар')
 
     last_login = models.DateTimeField(auto_now=True, verbose_name="Последний вход",  blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name="Дата регистрации", blank=True, null=True)
