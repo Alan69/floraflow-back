@@ -28,6 +28,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'phone', 'user_type', 'city', 'profile_picture']
         read_only_fields = ['email']  # Prevent updating email and user type
+    
+    def get_profile_picture(self, obj):
+        """Return the full URL for the profile picture."""
+        if obj.profile_picture:
+            # Build the full URL using Cloudinary utilities
+            return f"https://res.cloudinary.com/your-cloud-name/{obj.profile_picture}"
+        return None  # Return None if no picture is uploaded
 
 
 class UserChangePasswordSerializer(serializers.Serializer):
