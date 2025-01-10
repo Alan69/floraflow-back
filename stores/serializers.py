@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from orders.models import Order
-from .models import StoreProfile, Price, Webhook
+from .models import StoreProfile, Price
 
 class StoreOrderSerializer(serializers.ModelSerializer):
     client_name = serializers.CharField(source='client.username', read_only=True)
