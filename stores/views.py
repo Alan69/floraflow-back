@@ -6,6 +6,7 @@ from .serializers import StoreOrderSerializer, StoreProfileSerializer, PriceSeri
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.exceptions import PermissionDenied
 from .models import Price
+from datetime import timedelta
 
 # Endpoint to view client orders
 class StoreOrdersView(generics.ListAPIView):
@@ -47,6 +48,10 @@ class StoreOrderUpdateView(generics.CreateAPIView):
 
         # Create the Price object
         price = Price.objects.create(order=order, proposed_price=proposed_price)
+
+        # Schedule a Celery task to check and cancel the proposal after 1 minute
+        from stores.tasks import cancel_price_if_expired
+        cancel_price_if_expired.apply_async((price.uuid,), countdown=60)
 
         # Return a success response
         return Response(

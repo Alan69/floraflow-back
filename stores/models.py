@@ -2,6 +2,7 @@ from django.db import models
 from users.models import CustomUser
 import uuid
 from orders.models import Order
+from datetime import timedelta
 
 # Create your models here.
 class StoreProfile(models.Model):
@@ -32,6 +33,13 @@ class Price(models.Model):
     is_accepted = models.BooleanField(default=False)  # True if the client accepts this price
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    expires_at = models.DateTimeField(blank=True, null=True)  # Expiry time
+
+    def save(self, *args, **kwargs):
+        # Automatically set `expires_at` to 1 minute from `created_at`
+        if not self.expires_at:
+            self.expires_at = self.created_at + timedelta(minutes=1)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Price Proposal for Order {self.order.uuid}: {self.proposed_price}"
