@@ -92,10 +92,3 @@ class StoreProfileUpdateView(generics.RetrieveUpdateAPIView):
             return self.request.user.store_profile
         except AttributeError:
             raise PermissionDenied("Ни один профиль магазина не связан с этим пользователем..")
-
-class WebhookRegistrationView(generics.CreateAPIView):
-    serializer_class = WebhookSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
