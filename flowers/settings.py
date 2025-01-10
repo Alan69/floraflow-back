@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'cloudinary', 
     'cloudinary_storage',
+    'channels',
 
     'rest_framework',
     'rest_framework_simplejwt',
@@ -110,6 +111,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'flowers.wsgi.application'
+ASGI_APPLICATION = 'flowers.asgi.application'
 
 
 # Database

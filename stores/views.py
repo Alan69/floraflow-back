@@ -2,11 +2,11 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from orders.models import Order
-from .serializers import StoreOrderSerializer, StoreProfileSerializer, PriceSerializer
+from .serializers import StoreOrderSerializer, StoreProfileSerializer, PriceSerializer, WebhookSerializer
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.exceptions import PermissionDenied
 from .models import Price
-from datetime import timedelta
+from stores.tasks import cancel_price_if_expired, notify_webhooks
 
 # Endpoint to view client orders
 class StoreOrdersView(generics.ListAPIView):
@@ -49,8 +49,18 @@ class StoreOrderUpdateView(generics.CreateAPIView):
         # Create the Price object
         price = Price.objects.create(order=order, proposed_price=proposed_price)
 
+        notify_webhooks.apply_async(
+            kwargs={
+                'event_type': 'price_proposed',
+                'data': {
+                    "price_id": str(price.uuid),
+                    "proposed_price": str(price.proposed_price),
+                    "order_id": str(order.uuid),
+                },
+            }
+        )
+
         # Schedule a Celery task to check and cancel the proposal after 1 minute
-        from stores.tasks import cancel_price_if_expired
         cancel_price_if_expired.apply_async((price.uuid,), countdown=60)
 
         # Return a success response
@@ -77,3 +87,10 @@ class StoreProfileUpdateView(generics.RetrieveUpdateAPIView):
             return self.request.user.store_profile
         except AttributeError:
             raise PermissionDenied("Ни один профиль магазина не связан с этим пользователем..")
+
+class WebhookRegistrationView(generics.CreateAPIView):
+    serializer_class = WebhookSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

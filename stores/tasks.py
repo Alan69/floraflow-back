@@ -1,7 +1,7 @@
 from celery import shared_task
 from .models import StoreProfile
-from datetime import datetime
-from stores.models import Price
+import requests
+from stores.models import Price, Webhook
 from django.utils import timezone
 
 @shared_task
@@ -22,3 +22,12 @@ def cancel_price_if_expired(price_uuid):
             return f"Price {price_uuid} was canceled due to expiry."
     except Price.DoesNotExist:
         return f"Price {price_uuid} does not exist."
+    
+@shared_task
+def notify_webhooks(event_type, data):
+    webhooks = Webhook.objects.filter(event_type=event_type)
+    for webhook in webhooks:
+        try:
+            requests.post(webhook.url, json=data, timeout=5)
+        except requests.exceptions.RequestException as e:
+            print(f"Webhook notification failed for {webhook.url}: {str(e)}")

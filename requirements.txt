@@ -34,3 +34,4 @@ django-celery-beat
 django-celery-results
 django-cloudinary-storage==0.3.0
 cloudinary==1.42.1
+channels==4.2.0
