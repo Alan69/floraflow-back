@@ -297,3 +297,12 @@ CLOUDINARY = {
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 256 * 1024 * 1024
 FILE_UPLOAD_MAX_MEMORY_SIZE = 256 * 1024 * 1024
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
+}

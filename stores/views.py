@@ -6,7 +6,9 @@ from .serializers import StoreOrderSerializer, StoreProfileSerializer, PriceSeri
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.exceptions import PermissionDenied
 from .models import Price
-from stores.tasks import cancel_price_if_expired, notify_webhooks
+from stores.tasks import cancel_price_if_expired
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 # Endpoint to view client orders
 class StoreOrdersView(generics.ListAPIView):
@@ -49,10 +51,13 @@ class StoreOrderUpdateView(generics.CreateAPIView):
         # Create the Price object
         price = Price.objects.create(order=order, proposed_price=proposed_price)
 
-        notify_webhooks.apply_async(
-            kwargs={
-                'event_type': 'price_proposed',
-                'data': {
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"user_{order.client.id}",
+            {
+                "type": "send_notification",
+                "data": {
+                    "event": "price_proposed",
                     "price_id": str(price.uuid),
                     "proposed_price": str(price.proposed_price),
                     "order_id": str(order.uuid),

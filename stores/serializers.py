@@ -25,8 +25,3 @@ class PriceSerializer(serializers.ModelSerializer):
         model = Price
         fields = ['uuid', 'proposed_price', 'is_accepted', 'expires_at', 'created_at', 'updated_at']
         read_only_fields = ['uuid', 'is_accepted', 'expires_at', 'created_at', 'updated_at']
-
-class WebhookSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Webhook
-        fields = ['uuid', 'url', 'event_type']
