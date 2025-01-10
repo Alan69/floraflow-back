@@ -2,6 +2,7 @@ from celery import shared_task
 from .models import StoreProfile
 from datetime import datetime
 from stores.models import Price
+from django.utils import timezone
 
 @shared_task
 def update_store_ratings():
@@ -15,8 +16,8 @@ def update_store_ratings():
 def cancel_price_if_expired(price_uuid):
     try:
         price = Price.objects.get(uuid=price_uuid)
-        # Check if the price has been accepted; if not, cancel it
-        if not price.is_accepted and price.expires_at <= datetime.now():
+        # Use timezone.now() for comparison
+        if not price.is_accepted and price.expires_at <= timezone.now():
             price.delete()
             return f"Price {price_uuid} was canceled due to expiry."
     except Price.DoesNotExist:
