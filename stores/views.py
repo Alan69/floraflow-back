@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from orders.models import Order
-from .serializers import StoreOrderSerializer, StoreProfileSerializer, PriceSerializer, WebhookSerializer
+from .serializers import StoreOrderSerializer, StoreProfileSerializer, PriceSerializer
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.exceptions import PermissionDenied
 from .models import Price
