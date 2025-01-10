@@ -2,7 +2,7 @@ from django.db import models
 from users.models import CustomUser
 import uuid
 from orders.models import Order
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 # Create your models here.
 class StoreProfile(models.Model):
@@ -36,9 +36,9 @@ class Price(models.Model):
     expires_at = models.DateTimeField(blank=True, null=True)  # Expiry time
 
     def save(self, *args, **kwargs):
-        # Automatically set `expires_at` to 1 minute from `created_at`
+        # Use datetime.now() if created_at is not yet set
         if not self.expires_at:
-            self.expires_at = self.created_at + timedelta(minutes=1)
+            self.expires_at = (self.created_at or datetime.now()) + timedelta(minutes=1)
         super().save(*args, **kwargs)
 
     def __str__(self):
