@@ -47,7 +47,7 @@ class UserChangePasswordSerializer(serializers.Serializer):
 
     def validate(self, data):
         if data['old_password'] == data['new_password']:
-            raise serializers.ValidationError("New password cannot be the same as the old password.")
+            raise serializers.ValidationError("Новый пароль не может совпадать со старым паролем..")
         return data
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

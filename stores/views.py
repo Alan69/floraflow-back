@@ -26,11 +26,11 @@ class StoreOrderUpdateView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         # Ensure the user is authenticated
         if not request.user.is_authenticated:
-            raise NotAuthenticated("You must be logged in to perform this action.")
+            raise NotAuthenticated("Для выполнения этого действия вам необходимо войти в систему.")
 
         # Ensure the user is a store
         if request.user.user_type != 'store':
-            raise ValidationError("Only store users can propose prices.")
+            raise ValidationError("Только магазины могут предлагать цены.")
 
         # Get the `order_id` from the URL
         order_id = kwargs.get('order_id')
@@ -39,12 +39,12 @@ class StoreOrderUpdateView(generics.CreateAPIView):
         try:
             order = Order.objects.get(uuid=order_id)
         except Order.DoesNotExist:
-            return Response({"error": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Заказ не найден."}, status=status.HTTP_404_NOT_FOUND)
 
         # Extract the proposed price from the request data
         proposed_price = request.data.get('proposed_price')
         if not proposed_price:
-            return Response({"error": "Proposed price is required."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Предложенная цена обязательна."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Create the Price object
         price = Price.objects.create(order=order, proposed_price=proposed_price)
@@ -56,7 +56,7 @@ class StoreOrderUpdateView(generics.CreateAPIView):
         # Return a success response
         return Response(
             {
-                "detail": "Price proposed successfully.",
+                "detail": "Цена успешно предложена.",
                 "price": PriceSerializer(price).data,
             },
             status=status.HTTP_201_CREATED,
@@ -70,10 +70,10 @@ class StoreProfileUpdateView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         # Check if the logged-in user is of type 'store'
         if self.request.user.user_type != 'store':
-            raise PermissionDenied("You do not have permission to access this resource.")
+            raise PermissionDenied("У вас нет разрешения на доступ к этому ресурсу.")
 
         # Retrieve the store profile linked to the logged-in user
         try:
             return self.request.user.store_profile
         except AttributeError:
-            raise PermissionDenied("No store profile is associated with this user.")
+            raise PermissionDenied("Ни один профиль магазина не связан с этим пользователем..")

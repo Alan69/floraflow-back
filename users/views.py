@@ -83,7 +83,7 @@ class UserChangePasswordView(generics.UpdateAPIView):
         operation_description="Change the authenticated user's password",
         request_body=UserChangePasswordSerializer,
         responses={
-            200: 'Password updated successfully',
+            200: 'Пароль успешно обновлен',
             400: 'Invalid input data',
             401: 'Unauthorized',
         },
@@ -94,11 +94,11 @@ class UserChangePasswordView(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
 
         if not user.check_password(serializer.validated_data['old_password']):
-            return Response({'old_password': 'Incorrect password'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'old_password': 'Неправильный пароль'}, status=status.HTTP_400_BAD_REQUEST)
 
         user.set_password(serializer.validated_data['new_password'])
         user.save()
-        return Response({'detail': 'Password updated successfully'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'Пароль успешно обновлен'}, status=status.HTTP_200_OK)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -111,11 +111,11 @@ class AcceptPriceView(APIView):
         try:
             price = Price.objects.get(uuid=price_id, is_accepted=False)
         except Price.DoesNotExist:
-            return Response({"error": "Price proposal not found or already accepted."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Ценовое предложение не найдено или уже принято."}, status=status.HTTP_404_NOT_FOUND)
 
         # Ensure the request user is the client associated with the order
         if request.user != price.order.client:
-            return Response({"error": "You do not have permission to accept this price."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"error": "У вас нет разрешения принять эту цену."}, status=status.HTTP_403_FORBIDDEN)
 
         # Mark the price as accepted
         price.is_accepted = True
@@ -125,7 +125,7 @@ class AcceptPriceView(APIView):
         price.order.price = price.proposed_price
         price.order.save()
 
-        return Response({"detail": "Price accepted successfully."}, status=status.HTTP_200_OK)
+        return Response({"detail": "Цена успешно принята."}, status=status.HTTP_200_OK)
     
 class UserProposedPriceListView(generics.ListAPIView):
     """View to list all proposed prices for the current user."""

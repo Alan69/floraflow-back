@@ -34,7 +34,7 @@ class RateStoreView(generics.UpdateAPIView):
         # Ensure the client is rating their own order
         if order.client != request.user:
             return Response(
-                {"error": "You can only rate your own completed orders."},
+                {"error": "Вы можете давать оценку только своим заказам."},
                 status=status.HTTP_403_FORBIDDEN
             )
 

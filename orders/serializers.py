@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Order
-from users.models import CustomUser
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,10 +25,10 @@ class OrderRatingSerializer(serializers.ModelSerializer):
 
     def validate_rating(self, value):
         if value < 1 or value > 5:
-            raise serializers.ValidationError("Rating must be between 1 and 5.")
+            raise serializers.ValidationError("Рейтинг должен быть от 1 до 5.")
         return value
 
     def update(self, instance, validated_data):
         if instance.status != 'completed':
-            raise serializers.ValidationError("You can only rate a store for completed orders.")
+            raise serializers.ValidationError("Оценить магазин можно только по выполненным заказам..")
         return super().update(instance, validated_data)
