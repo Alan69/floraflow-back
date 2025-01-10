@@ -13,7 +13,7 @@ class Order(models.Model):
 
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     client = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='client_orders')
-    store = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='store_orders')
+    store = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='store_orders', null=True, blank=True)
     flower_data = models.TextField()  # Store details about the flowers
     price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
