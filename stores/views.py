@@ -37,9 +37,9 @@ class StoreOrderUpdateView(generics.CreateAPIView):
 
         # Validate if the order exists and belongs to the store
         try:
-            order = Order.objects.get(uuid=order_id, store=request.user)
+            order = Order.objects.get(uuid=order_id)
         except Order.DoesNotExist:
-            return Response({"error": "Order not found or not associated with your store."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
 
         # Extract the proposed price from the request data
         proposed_price = request.data.get('proposed_price')
