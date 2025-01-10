@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import StoreProfile
+from .models import StoreProfile, Price, Webhook
 
 @admin.register(StoreProfile)
 class StoreProfileAdmin(admin.ModelAdmin):
@@ -14,3 +14,6 @@ class StoreProfileAdmin(admin.ModelAdmin):
             'fields': ('uuid', 'user', 'logo', 'address', 'instagram_link')
         }),
     )
+
+admin.site.register(Price)
+admin.site.register(Webhook)
