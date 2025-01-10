@@ -20,8 +20,7 @@ from orders.views import (
 from stores.views import ( 
     StoreOrdersView, 
     StoreOrderUpdateView, 
-    StoreProfileUpdateView,
-    WebhookRegistrationView
+    StoreProfileUpdateView
 )
 
 router = DefaultRouter()
@@ -42,7 +41,6 @@ urlpatterns = [
     path('store/orders/', StoreOrdersView.as_view(), name='store_orders'),
     path('store/propose-price/<uuid:order_id>/', StoreOrderUpdateView.as_view(), name='propose-price'),
     path('store/profile/', StoreProfileUpdateView.as_view(), name='store_profile_update'),
-    path('webhooks/', WebhookRegistrationView.as_view(), name='webhook-registration'),
 
     # user orders
     path('client/order/', OrderCreateView.as_view(), name='order_create'),
