@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 
 TELEGRAM_BOT_TOKEN = '7878794010:AAE-E7zRnmO6xt06Gv8cuDLCkxOfUlmPZFQ'
-TELEGRAM_CHAT_ID = '1614330612'
+TELEGRAM_CHAT_ID = '479612043'
 
 def index(request):
     data = {
