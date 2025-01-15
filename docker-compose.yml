@@ -22,6 +22,20 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
 
+  web2:
+    build:
+      context: ./flora_flow_landing  # Path to the second app's codebase
+      dockerfile: Dockerfile
+    container_name: web2
+    command: gunicorn flora_flow.wsgi:application --bind 0.0.0.0:8001
+    volumes:
+      - ./flora_flow_landing:/app
+    ports:
+      - "8001:8001"
+    environment:
+      - DJANGO_SETTINGS_MODULE=flora_flow.settings
+
+
   celery:
     build:
       context: .

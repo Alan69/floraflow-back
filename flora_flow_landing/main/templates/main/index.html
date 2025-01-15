@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<section id="home" class="hero-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-7">
+        <div class="hero-text">
+          <h1>Доставка цветов по лучшей цене</h1>
+          <p>Мобильное приложение для выгодной покупки и продажи цветов!</p>
+          <hr>
+          <h5>Как это работает:</h5>
+          <ul class="check-list">
+            <li><img src="{% static 'img/check.png' %}" alt="check">Укажите, какие цветы вам нужны и куда доставить.</li>
+            <li><img src="{% static 'img/check.png' %}" alt="check">Получите предложения от магазинов.</li>
+            <li><img src="{% static 'img/check.png' %}" alt="check">Выберите лучшее по цене и срокам!</li>
+          </ul>
+          <hr>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <form role="form" class="get-a-quote" id="contact-form" method="post" action="{% url 'send_to_telegram' %}">
+          {% csrf_token %}
+          <div>
+            <h3>Эксклюзивный доступ</h3>
+            <h6>Оставьте свои контакты, и мы первыми отправим вам доступ к нашему приложению!</h6>
+          </div>
+          <div class="group-img">
+            <i>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_22_21)">
+                  <path d="M13.6569 10.3431C12.7855 9.47181 11.7484 8.82678 10.6168 8.43631C11.8288 7.60159 12.625 6.20463 12.625 4.625C12.625 2.07478 10.5502 0 8 0C5.44978 0 3.375 2.07478 3.375 4.625C3.375 6.20463 4.17122 7.60159 5.38319 8.43631C4.25163 8.82678 3.2145 9.47181 2.34316 10.3431C0.832156 11.8542 0 13.8631 0 16H1.25C1.25 12.278 4.27803 9.25 8 9.25C11.722 9.25 14.75 12.278 14.75 16H16C16 13.8631 15.1678 11.8542 13.6569 10.3431ZM8 8C6.13903 8 4.625 6.486 4.625 4.625C4.625 2.764 6.13903 1.25 8 1.25C9.86097 1.25 11.375 2.764 11.375 4.625C11.375 6.486 9.86097 8 8 8Z" fill="black"></path>
+                </g>
+              </svg>
+            </i>
+            <input type="text" name="Name" placeholder="Имя" required="">
+          </div>
+
+          <div class="group-img">
+            <i>
+              <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_22_29)">
+                  <path d="M13.9786 0H6.99136C5.75827 0.00139826 4.75904 1.00063 4.75781 2.23372V18.7664C4.75904 19.9995 5.75827 20.9987 6.99136 20.9999H13.9786C15.2117 20.9987 16.211 19.9995 16.2124 18.7664V2.23372C16.211 1.00063 15.2117 0.00139826 13.9786 0ZM15.2577 18.7664C15.257 19.4725 14.6848 20.0448 13.9786 20.0455H6.99136C6.28524 20.0448 5.713 19.4725 5.7123 18.7664V2.23372C5.713 1.52742 6.28524 0.955186 6.99136 0.954487H13.9786C14.6848 0.955186 15.257 1.52742 15.2577 2.23372V18.7664Z" fill="black"></path>
+                  <path d="M11.917 1.90918H9.05338C8.78981 1.90918 8.57605 2.12276 8.57605 2.38634C8.57605 2.64991 8.78981 2.86367 9.05338 2.86367H11.917C12.1806 2.86367 12.3942 2.64991 12.3942 2.38634C12.3942 2.12276 12.1806 1.90918 11.917 1.90918Z" fill="black"></path>
+                  <path d="M11.4397 18.1363C11.4397 18.6636 11.0123 19.091 10.4852 19.091C9.95786 19.091 9.53052 18.6636 9.53052 18.1363C9.53052 17.6092 9.95786 17.1818 10.4852 17.1818C11.0123 17.1818 11.4397 17.6092 11.4397 18.1363Z" fill="black"></path>
+                </g>
+              </svg>
+            </i>
+            <input class="input-type" type="number" name="Phone" placeholder="+7 ... ... .. .." required="">
+          </div>
+          <p>Как вы планируете использовать приложение?</p>
+          <div class="align-items-center">
+            <div class="radio-button">
+              <input type="radio" id="client" name="using_type" value="client" required>
+              <label for="client">Как клиент — заказывать цветы с доставкой.</label>
+            </div>
+            <div class="radio-button">
+              <input type="radio" id="shop" name="using_type" value="shop" required>
+              <label for="shop">Как цветочный магазин — принимать заказы и увеличивать продажи.</label><br>
+            </div>
+          </div>
+          <button type="submit" class="btn"><span>Получить</span></button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <img alt="img" class="shaps-line" src="{% static 'img/shaps-line.png' %}">
+  <img alt="img" class="shaps-dots" src="{% static 'img/shaps-dots.png' %}">
+</section>
+{% endblock %}
