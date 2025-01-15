@@ -31,8 +31,20 @@ def send_to_telegram(request):
         response = requests.post(url, data=payload)
 
         if response.status_code == 200:
-            return JsonResponse({'status': 'success', 'message': 'Data sent to Telegram successfully.'})
+            # Render a success page
+            return render(request, 'landing/success.html', {
+                'message': 'Ваши данные успешно отправлены в Telegram!',
+                'details': 'Мы свяжемся с вами в ближайшее время. Спасибо за использование нашего сервиса.'
+            })
         else:
-            return JsonResponse({'status': 'error', 'message': 'Failed to send data to Telegram.'})
+            # Render an error page
+            return render(request, 'landing/error.html', {
+                'message': 'Ошибка при отправке данных в Telegram.',
+                'details': 'Пожалуйста, проверьте данные и попробуйте снова позже.'
+            })
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+    # Render an error page for invalid request methods
+    return render(request, 'landing/error.html', {
+        'message': 'Недопустимый метод запроса.',
+        'details': 'Пожалуйста, отправьте данные через форму на нашем сайте.'
+    })
