@@ -1,5 +1,16 @@
 from rest_framework import serializers
-from .models import Order
+from .models import Order, Flower, Color
+
+class FlowerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flower
+        fields = ['uuid', 'text']
+
+class ColorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Color
+        fields = ['uuid', 'text']
+
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:

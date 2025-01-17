@@ -14,7 +14,11 @@ from users.views import (
 from orders.views import (
     OrderCreateView, 
     OrderHistoryView,
-    RateStoreView
+    RateStoreView,
+    FlowerListView,
+    FlowerDetailView,
+    ColorListView,
+    ColorDetailView
 )
 
 from stores.views import ( 
@@ -46,4 +50,9 @@ urlpatterns = [
     path('client/order/', OrderCreateView.as_view(), name='order_create'),
     path('client/order-history/', OrderHistoryView.as_view(), name='order_history'),
     path('client/order/<uuid:pk>/rate/', RateStoreView.as_view(), name='rate-store'),
+
+    path('flowers/', FlowerListView.as_view(), name='flower-list'),
+    path('flowers/<uuid:uuid>/', FlowerDetailView.as_view(), name='flower-detail'),
+    path('colors/', ColorListView.as_view(), name='color-list'),
+    path('colors/<uuid:uuid>/', ColorDetailView.as_view(), name='color-detail'),
 ]

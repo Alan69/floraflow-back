@@ -1,8 +1,8 @@
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Order
-from .serializers import OrderSerializer, OrderHistorySerializer, OrderRatingSerializer
+from .models import Order, Flower, Color
+from .serializers import OrderSerializer, OrderHistorySerializer, OrderRatingSerializer, FlowerSerializer, ColorSerializer
 
 # Endpoint for creating a new order
 class OrderCreateView(generics.CreateAPIView):
@@ -39,3 +39,21 @@ class RateStoreView(generics.UpdateAPIView):
             )
 
         return super().update(request, *args, **kwargs)
+
+class FlowerListView(generics.ListAPIView):
+    queryset = Flower.objects.all()
+    serializer_class = FlowerSerializer
+
+class FlowerDetailView(generics.RetrieveAPIView):
+    queryset = Flower.objects.all()
+    serializer_class = FlowerSerializer
+    lookup_field = 'uuid'
+
+class ColorListView(generics.ListAPIView):
+    queryset = Color.objects.all()
+    serializer_class = ColorSerializer
+
+class ColorDetailView(generics.RetrieveAPIView):
+    queryset = Color.objects.all()
+    serializer_class = ColorSerializer
+    lookup_field = 'uuid'
