@@ -4,7 +4,22 @@ from .models import Order
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['uuid', 'flower_data', 'price', 'status', 'created_at', 'updated_at']
+        fields = [
+            'uuid', 
+            'flower', 
+            'color', 
+            'flower_height', 
+            'quantity', 
+            'city', 
+            'recipients_address', 
+            'recipients_phone', 
+            'flower_data', 
+            'price', 
+            'status', 
+            'created_at', 
+            'updated_at',
+            'rating'
+        ]
         read_only_fields = ['uuid', 'status', 'created_at', 'updated_at']
 
     def create(self, validated_data):
@@ -15,7 +30,22 @@ class OrderSerializer(serializers.ModelSerializer):
 class OrderHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['uuid', 'flower_data', 'price', 'status', 'created_at', 'updated_at']
+        fields = [
+            'uuid', 
+            'flower', 
+            'color', 
+            'flower_height', 
+            'quantity', 
+            'city', 
+            'recipients_address', 
+            'recipients_phone', 
+            'flower_data', 
+            'price', 
+            'status', 
+            'created_at', 
+            'updated_at',
+            'rating'
+        ]
 
 class OrderRatingSerializer(serializers.ModelSerializer):
     class Meta:

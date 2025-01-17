@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order
+from .models import Order, Flower, Color
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
@@ -14,3 +14,6 @@ class OrderAdmin(admin.ModelAdmin):
             'fields': ('client', 'store', 'flower_data', 'price', 'status', 'created_at', 'updated_at')
         }),
     )
+
+admin.site.register(Flower)
+admin.site.register(Color)
