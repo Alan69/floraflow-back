@@ -28,8 +28,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'price', 
             'status', 
             'created_at', 
-            'updated_at',
-            'rating'
+            'updated_at'
         ]
         read_only_fields = ['uuid', 'status', 'created_at', 'updated_at']
 
