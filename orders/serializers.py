@@ -31,7 +31,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'created_at', 
             'updated_at'
         ]
-        read_only_fields = ['uuid', 'status', 'price', 'created_at', 'updated_at']
+        read_only_fields = ['uuid', 'status', 'price', 'reason', 'created_at', 'updated_at']
 
     def create(self, validated_data):
         client = self.context['request'].user
