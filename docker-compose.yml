@@ -14,13 +14,8 @@ services:
     depends_on:
       - db
       - redis
-    environment:
-      - DJANGO_SETTINGS_MODULE=flowers.settings
-      - POSTGRES_NAME=flowers
-      - POSTGRES_USER=flowers
-      - POSTGRES_PASSWORD=flowers
-      - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
+    env_file:
+      - .env
 
   web2:
     build:
@@ -50,6 +45,8 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
     volumes:
       - .:/app
+    env_file:
+      - .env
 
   redis:
     image: redis:6
@@ -63,9 +60,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=flowers
-      - POSTGRES_PASSWORD=flowers
-      - POSTGRES_DB=flowers
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_NAME}
 
   nginx:
     image: nginx:latest
