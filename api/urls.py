@@ -18,7 +18,8 @@ from orders.views import (
     FlowerListView,
     FlowerDetailView,
     ColorListView,
-    ColorDetailView
+    ColorDetailView,
+    CancelOrderView
 )
 
 from stores.views import ( 
@@ -40,6 +41,7 @@ urlpatterns = [
     path('me/', UserProfileView.as_view(), name='user_profile'),
     path('client/prices/<uuid:price_id>/accept/', AcceptPriceView.as_view(), name='accept-price'),
     path('client/proposed-prices/', UserProposedPriceListView.as_view(), name='user-propose-prices'),
+    path('client/<uuid:order_uuid>/cancel/', CancelOrderView.as_view(), name='cancel-order'),
 
     # stores
     path('store/orders/', StoreOrdersView.as_view(), name='store_orders'),

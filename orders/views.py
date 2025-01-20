@@ -3,6 +3,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Order, Flower, Color
 from .serializers import OrderSerializer, OrderHistorySerializer, OrderRatingSerializer, FlowerSerializer, ColorSerializer
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # Endpoint for creating a new order
 class OrderCreateView(generics.CreateAPIView):
@@ -57,3 +61,70 @@ class ColorDetailView(generics.RetrieveAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
     lookup_field = 'uuid'
+
+class CancelOrderView(APIView):
+    @swagger_auto_schema(
+        operation_summary="Cancel an Order",
+        operation_description="Allows a user to cancel an order by providing a cancellation reason. The order's status will be updated to 'canceled'.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'reason': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="The reason for canceling the order.",
+                    example="Changed my mind about the purchase"
+                ),
+            },
+            required=['reason']
+        ),
+        responses={
+            200: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "detail": openapi.Schema(type=openapi.TYPE_STRING, description="Success message"),
+                    "order": openapi.Schema(
+                        type=openapi.TYPE_OBJECT,
+                        properties={
+                            "uuid": openapi.Schema(type=openapi.TYPE_STRING, description="Order UUID"),
+                            "status": openapi.Schema(type=openapi.TYPE_STRING, description="Order status"),
+                            "reason": openapi.Schema(type=openapi.TYPE_STRING, description="Reason for cancellation"),
+                        },
+                    ),
+                },
+            ),
+            400: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "detail": openapi.Schema(type=openapi.TYPE_STRING, description="Error message"),
+                },
+            ),
+        }
+    )
+    def post(self, request, order_uuid):
+        # Fetch the order by UUID
+        order = get_object_or_404(Order, uuid=order_uuid)
+
+        # Check if the order is already canceled or completed
+        if order.status in ['canceled', 'completed']:
+            return Response(
+                {"detail": f"Order is already {order.status}."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Get the cancellation reason from the request
+        reason = request.data.get('reason', '').strip()
+        if not reason:
+            return Response(
+                {"detail": "Cancellation reason is required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Update the order status and add the cancellation reason
+        order.status = 'canceled'
+        order.reason = reason  # Save the reason to the new field
+        order.save()
+
+        return Response(
+            {"detail": "Order canceled successfully.", "order": OrderSerializer(order).data},
+            status=status.HTTP_200_OK
+        )

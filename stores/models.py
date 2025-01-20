@@ -3,6 +3,7 @@ from users.models import CustomUser
 import uuid
 from orders.models import Order
 from datetime import datetime, timedelta
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 class StoreProfile(models.Model):
@@ -30,6 +31,8 @@ class Price(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='prices')
     proposed_price = models.DecimalField(max_digits=10, decimal_places=2)
+    flower_img = CloudinaryField('flower_img', blank=True, null=True)
+    comment = models.TextField(null=True, blank=True)
     is_accepted = models.BooleanField(default=False)  # True if the client accepts this price
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

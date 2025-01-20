@@ -20,17 +20,18 @@ class OrderSerializer(serializers.ModelSerializer):
             'flower', 
             'color', 
             'flower_height', 
-            'quantity', 
-            'city', 
+            'quantity',
+            'decoration',
             'recipients_address', 
             'recipients_phone', 
-            'flower_data', 
-            'price', 
+            'flower_data',
+            'price',
             'status', 
+            'reason',
             'created_at', 
             'updated_at'
         ]
-        read_only_fields = ['uuid', 'status', 'created_at', 'updated_at']
+        read_only_fields = ['uuid', 'status', 'price', 'created_at', 'updated_at']
 
     def create(self, validated_data):
         client = self.context['request'].user
@@ -46,12 +47,14 @@ class OrderHistorySerializer(serializers.ModelSerializer):
             'color', 
             'flower_height', 
             'quantity', 
+            'decoration',
             'city', 
             'recipients_address', 
             'recipients_phone', 
             'flower_data', 
             'price', 
             'status', 
+            'reason',
             'created_at', 
             'updated_at',
             'rating'

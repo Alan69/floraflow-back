@@ -45,11 +45,18 @@ class StoreOrderUpdateView(generics.CreateAPIView):
 
         # Extract the proposed price from the request data
         proposed_price = request.data.get('proposed_price')
+        flower_img = request.data.get('flower_img')  # Get flower_img if provided
+        comment = request.data.get('comment')  # Get comment if provided
         if not proposed_price:
             return Response({"error": "Предложенная цена обязательна."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Create the Price object
-        price = Price.objects.create(order=order, proposed_price=proposed_price)
+        price = Price.objects.create(
+            order=order,
+            proposed_price=proposed_price,
+            flower_img=flower_img,
+            comment=comment
+        )
 
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(

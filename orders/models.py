@@ -19,10 +19,10 @@ class Color(models.Model):
 # Create your models here.
 class Order(models.Model):
     STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('accepted', 'Accepted'),
-        ('completed', 'Completed'),
-        ('canceled', 'Canceled'),
+        ('pending', 'В обработке'),
+        ('accepted', 'В пути'),
+        ('completed', 'Доставлен'),
+        ('canceled', 'Отменен'),
     ]
 
     FLOWER_HEIGHT_CHOICES = [
@@ -30,6 +30,13 @@ class Order(models.Model):
         ('60cm', '60cm'),
         ('70cm', '70cm'),
         ('80cm', '80cm'),
+        ('90cm', '90cm'),
+        ('100cm', '100cm'),
+        ('110cm', '110cm'),
+        ('120cm', '120cm'),
+        ('130cm', '130cm'),
+        ('140cm', '140cm'),
+        ('150cm', '150cm'),
     ]
 
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -39,12 +46,14 @@ class Order(models.Model):
     color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name='color', null=True, blank=True)
     flower_height = models.CharField(max_length=20, choices=FLOWER_HEIGHT_CHOICES)
     quantity = models.PositiveIntegerField()
+    decoration = models.BooleanField(default=False)
     city = models.CharField(max_length=255, default="Астана")
     recipients_address = models.CharField(max_length=255)
     recipients_phone = models.CharField(max_length=15)
     flower_data = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    reason = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     rating = models.PositiveIntegerField(null=True, blank=True, default=None)
