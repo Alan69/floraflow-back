@@ -20,7 +20,8 @@ class Color(models.Model):
 class Order(models.Model):
     STATUS_CHOICES = [
         ('pending', 'В обработке'),
-        ('accepted', 'В пути'),
+        ('accepted', 'Заказ принят'),
+        ('in_transit', 'В пути'),
         ('completed', 'Доставлен'),
         ('canceled', 'Отменен'),
     ]
