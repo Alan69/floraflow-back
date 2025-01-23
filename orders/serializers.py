@@ -37,11 +37,23 @@ class OrderSerializer(serializers.ModelSerializer):
         client = self.context['request'].user
         validated_data['client'] = client
         return super().create(validated_data)
+    
+
+class FlowerSerializerText(serializers.ModelSerializer):
+    class Meta:
+        model = Flower
+        fields = ['text']  # Include only the 'text' field
+
+
+class ColorSerializerText(serializers.ModelSerializer):
+    class Meta:
+        model = Color
+        fields = ['text']  # Include only the 'text' field
 
 class OrderHistorySerializer(serializers.ModelSerializer):
-    flower = FlowerSerializer()
-    color = ColorSerializer()
-    
+    flower = FlowerSerializerText()
+    color = ColorSerializerText()
+
     class Meta:
         model = Order
         fields = [
