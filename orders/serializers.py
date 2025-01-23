@@ -39,6 +39,9 @@ class OrderSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 class OrderHistorySerializer(serializers.ModelSerializer):
+    flower = FlowerSerializer()
+    color = ColorSerializer()
+    
     class Meta:
         model = Order
         fields = [
