@@ -16,6 +16,11 @@ class OrderCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(client=self.request.user)
 
+class OrderDetailView(generics.RetrieveAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    lookup_field = 'uuid'
+
 # Endpoint for viewing order history
 class OrderHistoryView(generics.ListAPIView):
     serializer_class = OrderHistorySerializer
