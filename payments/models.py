@@ -11,19 +11,6 @@ class Tariff(models.Model):
     is_active = models.BooleanField(default=False)
     lasttimeactive = models.DateTimeField(null=True, blank=True, verbose_name="Дата покупки")
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            # Fetch the existing record from the database
-            old_instance = Tariff.objects.get(pk=self.pk)
-            # Check if is_active has changed from False to True
-            if not old_instance.is_active and self.is_active:
-                self.lasttimeactive = timezone.now()
-        else:
-            # For new instances, set lasttimeactive if is_active is True
-            if self.is_active:
-                self.lasttimeactive = timezone.now()
-        super(Tariff, self).save(*args, **kwargs)
-
     def __str__(self):
         return f"{self.id} - {self.name}"
     

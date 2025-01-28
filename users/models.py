@@ -24,11 +24,6 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
-
-        if not user.tariff:
-            default_tariff = Tariff.objects.get_or_create(name="Free", defaults={'price': 0, 'days': 0, 'is_active': True})[0]
-            user.tariff = default_tariff
-
         user.save(using=self._db)
         return user
 
