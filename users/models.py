@@ -67,6 +67,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     current_order = models.ForeignKey('orders.Order', on_delete=models.SET_NULL, null=True, blank=True, related_name='users_with_current_order')
     tariff = models.ForeignKey(Tariff, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Тариф")
+    tariff_days = models.IntegerField(default=0)
 
     last_login = models.DateTimeField(auto_now=True, verbose_name="Последний вход",  blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name="Дата регистрации", blank=True, null=True)
