@@ -51,9 +51,9 @@ def get_payment_token(request):
         type=openapi.TYPE_OBJECT,
         properties={
             'token': openapi.Schema(type=openapi.TYPE_STRING, description="Token."),
-            'tariff_id': openapi.Schema(type=openapi.TYPE_STRING, description="tariff id."),
+            'tariff_uuid': openapi.Schema(type=openapi.TYPE_STRING, description="tariff uuid."),
         },
-        required=['token', 'tariff_id']
+        required=['token', 'tariff_uuid']
     ),
     responses={
         200: openapi.Response(
@@ -75,8 +75,8 @@ def initiate_payment(request):
     View to initiate the payment for the selected tariff.
     """
     user = request.user
-    tariff_id = request.data.get('tariff_id')
-    tariff = Tariff.objects.get(id=tariff_id)
+    tariff_uuid = request.data.get('tariff_uuid')
+    tariff = Tariff.objects.get(uuid=tariff_uuid)
     
     # Get the payment token
     token = request.data.get('token')
