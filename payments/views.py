@@ -256,11 +256,6 @@ def check_payment_status(request):
                 user.tariff = tariff
                 user.save()  # Save the user after attaching the tariff to ensure it's linked
 
-                # Now update the tariff is_active status
-                user.tariff.is_active = True  # Activate the tariff
-                user.tariff.save()  # Save the tariff status update
-                user.save()  # Ensure everything is saved
-
                 # return HttpResponseRedirect(f"https://aimmagic.com/post-query")
 
             # Return payment status if not "CHARGED"
