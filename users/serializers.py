@@ -29,8 +29,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'phone', 'user_type', 'city', 'profile_picture', 'current_order']
-        read_only_fields = ['email']  # Prevent updating email and user type
+        fields = ['email', 'first_name', 'last_name', 'phone', 'user_type', 'city', 'profile_picture', 'current_order', 'tariff']
+        read_only_fields = ['email', 'current_order', 'tariff']  # Prevent updating email and user type
 
     def get_profile_picture(self, obj):
         """Return the full URL for the profile picture."""

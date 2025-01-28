@@ -5,6 +5,7 @@ from django.conf import settings
 import os
 from PIL import Image, ImageOps
 from cloudinary.models import CloudinaryField
+from payments.models import Tariff
 
 def user_directory_path_profile(instance, filename):
     # файл будет загружен в MEDIA_ROOT/user_<uuid>/<filename>
@@ -23,6 +24,11 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
+
+        if not user.tariff:
+            default_tariff = Tariff.objects.get_or_create(name="Free", defaults={'price': 0, 'days': 0, 'is_active': True})[0]
+            user.tariff = default_tariff
+
         user.save(using=self._db)
         return user
 
@@ -65,6 +71,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     profile_picture = CloudinaryField('profile_picture', blank=True, null=True)
 
     current_order = models.ForeignKey('orders.Order', on_delete=models.SET_NULL, null=True, blank=True, related_name='users_with_current_order')
+    tariff = models.ForeignKey(Tariff, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Тариф")
 
     last_login = models.DateTimeField(auto_now=True, verbose_name="Последний вход",  blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name="Дата регистрации", blank=True, null=True)

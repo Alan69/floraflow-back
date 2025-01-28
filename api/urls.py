@@ -29,6 +29,13 @@ from stores.views import (
     StoreProfileUpdateView
 )
 
+from payments.views import (
+    get_tariffs,
+    get_payment_token,
+    initiate_payment,
+    check_payment_status
+)
+
 router = DefaultRouter()
 
 urlpatterns = [
@@ -55,8 +62,15 @@ urlpatterns = [
     path('client/order-history/', OrderHistoryView.as_view(), name='order_history'),
     path('client/order/<uuid:pk>/rate/', RateStoreView.as_view(), name='rate-store'),
 
+    # order data
     path('flowers/', FlowerListView.as_view(), name='flower-list'),
     path('flowers/<uuid:uuid>/', FlowerDetailView.as_view(), name='flower-detail'),
     path('colors/', ColorListView.as_view(), name='color-list'),
     path('colors/<uuid:uuid>/', ColorDetailView.as_view(), name='color-detail'),
+
+    # payments
+    path('tariffs/', get_tariffs, name='get_tariffs'),
+    path('payment/token/', get_payment_token, name='get_payment_token'),
+    path('payment/initiate/', initiate_payment, name='initiate_payment'),
+    path('payment/status/', check_payment_status, name='check_payment_status'),
 ]
