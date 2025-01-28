@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from rest_framework.exceptions import ValidationError
 
 # Endpoint for creating a new order
 class OrderCreateView(generics.CreateAPIView):
@@ -14,7 +15,12 @@ class OrderCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(client=self.request.user)
+        if self.request.user.current_order:
+            raise ValidationError("You already have an active order.")
+        
+        order = serializer.save(client=self.request.user)
+        self.request.user.current_order = order
+        self.request.user.save()
 
 class OrderDetailView(generics.RetrieveAPIView):
     queryset = Order.objects.all()

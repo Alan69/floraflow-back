@@ -64,6 +64,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     picture = models.ImageField(upload_to=user_directory_path_profile, blank=True, null=True, verbose_name='Аватар')
     profile_picture = CloudinaryField('profile_picture', blank=True, null=True)
 
+    current_order = models.ForeignKey('orders.Order', on_delete=models.SET_NULL, null=True, blank=True, related_name='users_with_current_order')
+
     last_login = models.DateTimeField(auto_now=True, verbose_name="Последний вход",  blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name="Дата регистрации", blank=True, null=True)
 

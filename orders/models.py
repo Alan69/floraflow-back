@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import CustomUser
 import uuid
+from django.db import transaction
 
 class Flower(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -58,6 +59,18 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     rating = models.PositiveIntegerField(null=True, blank=True, default=None)
+
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            # Check if status is being updated to 'completed' or 'canceled'
+            if self.pk:  # Only for existing orders
+                old_status = Order.objects.filter(pk=self.pk).values_list('status', flat=True).first()
+                if old_status != self.status and self.status in ['completed', 'canceled']:
+                    # Nullify the client's current_order
+                    if self.client.current_order_id == self.pk:  # Ensure it matches the current order
+                        self.client.current_order = None
+                        self.client.save()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Order #{self.uuid} - {self.status}"
