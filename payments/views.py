@@ -84,8 +84,8 @@ def initiate_payment(request):
         return Response({"error": "Payment token is required"}, status=status.HTTP_400_BAD_REQUEST)
 
     # Generate a unique invoice ID (ensure uniqueness)
-    invoice_id = f"{tariff.id}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    account_id = f"{user.id}"
+    invoice_id = f"{tariff.uuid}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+    account_id = f"{user.uuid}"
 
     invoice_id = ''.join(char for char in invoice_id if char.isdigit())
 
@@ -241,7 +241,7 @@ def check_payment_status(request):
             if status == "CHARGED":
                 try:
                     # Find the user by account ID
-                    user = CustomUser.objects.get(id=account_id)  # Use accountId to get user
+                    user = CustomUser.objects.get(uuid=account_id)  # Use accountId to get user
                 except CustomUser.DoesNotExist:
                     return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
                 
