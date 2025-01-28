@@ -51,8 +51,6 @@ def get_payment_token(request):
         type=openapi.TYPE_OBJECT,
         properties={
             'token': openapi.Schema(type=openapi.TYPE_STRING, description="Token."),
-        },
-        properties={
             'tariff_id': openapi.Schema(type=openapi.TYPE_STRING, description="tariff id."),
         },
         required=['token', 'tariff_id']
