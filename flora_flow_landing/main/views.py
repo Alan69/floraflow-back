@@ -18,9 +18,12 @@ def send_to_telegram(request):
         name = request.POST.get('Name')
         phone = request.POST.get('Phone')
         using_type = request.POST.get('using_type')
+        shop_name = request.POST.get('shop_name', '')  # Get shop_name, default to empty string if not provided
 
         # Construct the message
         message = f"👤 Имя: {name}\n📞 Телефон: {phone}\n📋 Использование: {using_type}"
+        if using_type == 'shop' and shop_name:
+            message += f"\n🏪 Название магазина: {shop_name}"
 
         # Send the message to Telegram
         url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
