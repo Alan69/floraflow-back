@@ -32,7 +32,7 @@ def get_payment_token(request):
     """
     url = 'https://epay-oauth.homebank.kz/oauth2/token'
     data = {
-        'grant_type': 'client_credentials',
+        'grant_type': 'password',
         'username': 'avirbox@mail.ru',
         'password': 'naxmaf-4Homgo-janhik',
         'scope': 'webapi usermanagement email_send verification statement statistics payment', 
