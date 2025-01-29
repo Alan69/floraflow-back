@@ -34,7 +34,7 @@ def get_payment_token(request):
     data = {
         'grant_type': 'password',
         'username': 'avirbox@mail.ru',
-        'password': 'naxmaf-4Homgo-janhik',
+        'password': 'bynbo5-Wodjis-rebdor',
         'scope': 'webapi usermanagement email_send verification statement statistics payment', 
         'client_id': settings.HALYK_CLIENT_ID,
         'client_secret': settings.HALYK_CLIENT_SECRET,
@@ -209,7 +209,7 @@ def check_payment_status(request):
     oauth_data = {
         'grant_type': 'password',
         'username': 'avirbox@mail.ru',
-        'password': 'naxmaf-4Homgo-janhik',
+        'password': 'bynbo5-Wodjis-rebdor',
         'scope': 'webapi usermanagement email_send verification statement statistics payment',
         'client_id': settings.HALYK_CLIENT_ID,
         'client_secret': settings.HALYK_CLIENT_SECRET
