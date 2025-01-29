@@ -11,6 +11,7 @@ from django.conf import settings
 from rest_framework import status
 import json
 from users.models import CustomUser
+from .utils import generate_secret_hash
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -32,9 +33,12 @@ def get_payment_token(request):
     url = 'https://epay-oauth.homebank.kz/oauth2/token'
     data = {
         'grant_type': 'client_credentials',
+        'username': 'avirbox@mail.ru',
+        'password': 'naxmaf-4Homgo-janhik',
+        'scope': 'webapi usermanagement email_send verification statement statistics payment', 
         'client_id': settings.HALYK_CLIENT_ID,
         'client_secret': settings.HALYK_CLIENT_SECRET,
-        'scope': 'webapi usermanagement email_send verification statement statistics payment', 
+        'secret_hash': generate_secret_hash(), 
     }
 
     response = requests.post(url, data=data)
@@ -103,6 +107,7 @@ def initiate_payment(request):
         'notifier_contact_sms': '',
         'currency': 'KZT',
         'post_link': '',
+        'failure_post_link': '',
         'back_link': '',
         'failure_back_link': ''
     }
