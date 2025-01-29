@@ -120,15 +120,28 @@ def initiate_payment(request):
     # Step 3: Send the request to Halyk Bank's payment API
     response = requests.post('https://epay-api.homebank.kz/invoice', data=json.dumps(payment_data), headers=headers)
 
+    # Debugging: Log the raw response content and status code
+    print("Response Status Code:", response.status_code)
+    print("Response Content:", response.text)
+
     if response.status_code == 200:
-        response_data = response.json()
-        payment_url = response_data.get('invoice_url')
-        return Response({
-            "invoice_url": payment_url,
-            "invoice_id": invoice_id
-        }, status=status.HTTP_200_OK)
+        try:
+            response_data = response.json()
+            payment_url = response_data.get('invoice_url')
+            return Response({
+                "invoice_url": payment_url,
+                "invoice_id": invoice_id
+            }, status=status.HTTP_200_OK)
+        except ValueError as e:
+            # Handle JSON decode error
+            return Response({"error": "Invalid JSON response from payment gateway", "details": response.text}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
-        return Response({"error": "Payment initiation failed", "details": response.json()}, status=response.status_code)
+        # Handle non-200 responses
+        try:
+            error_details = response.json()
+        except ValueError:
+            error_details = response.text  # Fallback to raw text if JSON parsing fails
+        return Response({"error": "Payment initiation failed", "details": error_details}, status=response.status_code)
 
 @swagger_auto_schema(
     method='post',
