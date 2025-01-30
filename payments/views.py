@@ -95,7 +95,7 @@ def initiate_payment(request):
 
     # Prepare payment data according to the Halyk Bank Invoice Link API
     payment_data = {
-        'shop_id': settings.HALYK_SHOP_ID,
+        'shop_id': '761429bf-a56a-4871-8a14-c5be5f0296e5',
         'account_id': account_id,
         'invoice_id': invoice_id,
         'amount': int(tariff.price),
