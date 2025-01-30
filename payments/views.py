@@ -88,10 +88,10 @@ def initiate_payment(request):
         return Response({"error": "Payment token is required"}, status=status.HTTP_400_BAD_REQUEST)
 
     # Generate a unique invoice ID (ensure uniqueness)
-    invoice_id = f"{tariff.uuid}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+    # invoice_id = f"{tariff.uuid}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
     account_id = f"{user.uuid}"
 
-    invoice_id = ''.join(char for char in invoice_id if char.isdigit())
+    invoice_id = ''.join(char for char in account_id if char.isdigit())
 
     # Prepare payment data according to the Halyk Bank Invoice Link API
     payment_data = {
