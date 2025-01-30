@@ -98,7 +98,7 @@ def initiate_payment(request):
         'shop_id': settings.HALYK_SHOP_ID,
         'account_id': account_id,
         'invoice_id': invoice_id,
-        'amount': int(tariff.price),
+        'amount': 100,
         'language': 'rus',
         'description': tariff.name,
         'expire_period': '1d',
