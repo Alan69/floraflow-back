@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Order, Flower, Color
-from .serializers import OrderSerializer, OrderHistorySerializer, OrderRatingSerializer, FlowerSerializer, ColorSerializer
+from .serializers import OrderSerializer, OrderHistorySerializer, OrderRatingSerializer, FlowerSerializer, ColorSerializer, OrderSerializerDetail
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
@@ -24,7 +24,7 @@ class OrderCreateView(generics.CreateAPIView):
 
 class OrderDetailView(generics.RetrieveAPIView):
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    serializer_class = OrderSerializerDetail
     lookup_field = 'uuid'
 
 # Endpoint for viewing order history
