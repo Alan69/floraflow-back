@@ -41,6 +41,10 @@ class RateStoreView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            return Order.objects.none()  # Return an empty queryset
+
         return Order.objects.filter(client=self.request.user, status='completed')
 
     def update(self, request, *args, **kwargs):
