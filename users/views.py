@@ -17,6 +17,7 @@ from stores.serializers import PriceSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from .pagination import CustomPagination
+from django_filters import rest_framework as filters
 
 class UserRegistrationView(generics.CreateAPIView):
     """Endpoint for user registration."""
@@ -127,13 +128,21 @@ class AcceptPriceView(APIView):
 
         return Response({"detail": "Цена успешно принята."}, status=status.HTTP_200_OK)
     
+class PriceFilter(filters.FilterSet):
+    class Meta:
+        model = Price
+        fields = {
+            'is_accepted': ['exact'],
+            'order__uuid': ['exact'],
+        }
+
 class UserProposedPriceListView(generics.ListAPIView):
     """View to list all proposed prices for the current user."""
     serializer_class = PriceSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend, OrderingFilter]  # Add filtering and ordering backends
-    filterset_fields = ['is_accepted', 'order__uuid']  # Fields you want to filter by
+    filterset_class = PriceFilter  # Fields you want to filter by
     ordering_fields = ['created_at', 'updated_at', 'proposed_price']  # Fields you can order by
     ordering = ['-created_at']  # Default ordering
 
