@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from .models import CustomUser
-from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from cloudinary.utils import cloudinary_url
+from orders.serializers import OrderSerializer
+from payments.serializers import TariffSerializer
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """Serializer for user registration."""
@@ -26,6 +26,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for retrieving and updating user profile."""
     profile_picture = serializers.SerializerMethodField()
+    current_order = OrderSerializer(read_only=True)
+    tariff = TariffSerializer(read_only=True)
 
     class Meta:
         model = CustomUser

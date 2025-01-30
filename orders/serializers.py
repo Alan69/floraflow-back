@@ -38,6 +38,27 @@ class OrderSerializer(serializers.ModelSerializer):
         validated_data['client'] = client
         return super().create(validated_data)
     
+class OrderSerializerDetail(serializers.ModelSerializer):
+    flower = FlowerSerializer(read_only=True)
+    color = ColorSerializer(read_only=True)
+    class Meta:
+        model = Order
+        fields = [
+            'uuid', 
+            'flower', 
+            'color', 
+            'flower_height', 
+            'quantity',
+            'decoration',
+            'recipients_address', 
+            'recipients_phone', 
+            'flower_data',
+            'price',
+            'status', 
+            'reason',
+            'created_at', 
+            'updated_at'
+        ]
 
 class FlowerSerializerText(serializers.ModelSerializer):
     class Meta:
