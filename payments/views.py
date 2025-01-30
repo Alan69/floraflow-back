@@ -143,7 +143,7 @@ def initiate_payment(request):
         except ValueError:
             error_details = response.text  # Fallback to raw text if JSON parsing fails
             print(payment_data)
-        return Response({"error": "Payment initiation failed", "details": error_details}, status=response.status_code)
+        return Response({"error": f"Payment initiation failed {payment_data}", "details": error_details,}, status=response.status_code)
 
 @swagger_auto_schema(
     method='post',
