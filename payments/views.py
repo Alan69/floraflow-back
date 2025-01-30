@@ -98,7 +98,7 @@ def initiate_payment(request):
         'shop_id': settings.HALYK_SHOP_ID,
         'account_id': account_id,
         'invoice_id': invoice_id,
-        'amount': 100,
+        'amount': int(tariff.price),
         'language': 'rus',
         'description': tariff.name,
         'expire_period': '1d',
@@ -141,6 +141,7 @@ def initiate_payment(request):
             error_details = response.json()
         except ValueError:
             error_details = response.text  # Fallback to raw text if JSON parsing fails
+            print(payment_data)
         return Response({"error": "Payment initiation failed", "details": error_details}, status=response.status_code)
 
 @swagger_auto_schema(
