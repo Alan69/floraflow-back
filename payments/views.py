@@ -142,8 +142,7 @@ def initiate_payment(request):
             error_details = response.json()
         except ValueError:
             error_details = response.text  # Fallback to raw text if JSON parsing fails
-            print(payment_data)
-        return Response({"error": f"Payment initiation failed {payment_data}", "details": error_details,}, status=response.status_code)
+        return Response({"error": f"Payment initiation failed", "details": error_details,}, status=response.status_code)
 
 @swagger_auto_schema(
     method='post',
@@ -212,7 +211,7 @@ def check_payment_status(request):
         'grant_type': 'password',
         'username': 'avirbox@mail.ru',
         'password': 'bynbo5-Wodjis-rebdor',
-        'scope': 'webapi usermanagement email_send verification statement statistics payment',
+        'scope': 'api',
         'client_id': settings.HALYK_CLIENT_ID,
         'client_secret': settings.HALYK_CLIENT_SECRET
     }
