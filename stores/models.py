@@ -37,7 +37,7 @@ class Price(models.Model):
     is_accepted = models.BooleanField(default=False)  # True if the client accepts this price
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    expires_at = models.DateTimeField()
+    expires_at = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # If expires_at is naive, make it timezone-aware
