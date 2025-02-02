@@ -9,6 +9,7 @@ from .models import Price
 from stores.tasks import cancel_price_if_expired
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.utils import timezone
 
 # Endpoint to view client orders
 class StoreOrdersView(generics.ListAPIView):

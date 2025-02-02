@@ -4,6 +4,7 @@ import uuid
 from orders.models import Order
 from datetime import datetime, timedelta
 from cloudinary.models import CloudinaryField
+from django.utils import timezone
 
 # Create your models here.
 class StoreProfile(models.Model):
@@ -36,12 +37,12 @@ class Price(models.Model):
     is_accepted = models.BooleanField(default=False)  # True if the client accepts this price
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    expires_at = models.DateTimeField(blank=True, null=True)  # Expiry time
+    expires_at = models.DateTimeField()
 
     def save(self, *args, **kwargs):
-        # Use datetime.now() if created_at is not yet set
-        if not self.expires_at:
-            self.expires_at = (self.created_at or datetime.now()) + timedelta(minutes=1)
+        # If expires_at is naive, make it timezone-aware
+        if self.expires_at and timezone.is_naive(self.expires_at):
+            self.expires_at = timezone.make_aware(self.expires_at)
         super().save(*args, **kwargs)
 
     def __str__(self):
