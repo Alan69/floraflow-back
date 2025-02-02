@@ -31,3 +31,4 @@ class PriceSerializer(serializers.ModelSerializer):
         fields = ['uuid', 'proposed_price', 'flower_img', 'comment', 'is_accepted', 
                  'created_at', 'updated_at', 'expires_at', 'store_name', 'logo', 
                  'instagram_link', 'whatsapp_number']
+        read_only_fields = ['uuid', 'is_accepted', 'expires_at', 'created_at', 'updated_at']
