@@ -1,7 +1,6 @@
 import uuid
 from django.db import models
-from django.utils import timezone
-from users.models import CustomUser
+from django.utils import timezone 
 
 class Tariff(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -18,7 +17,7 @@ class Tariff(models.Model):
 
 class TariffHistory(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE)
     tariff = models.ForeignKey(Tariff, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
