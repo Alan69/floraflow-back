@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.utils import timezone
+from users.models import CustomUser
 
 class Tariff(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -14,3 +15,17 @@ class Tariff(models.Model):
     class Meta:
         verbose_name = 'Тариф'
         verbose_name_plural = 'Тарифы'
+
+class TariffHistory(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    tariff = models.ForeignKey(Tariff, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.uuid} - {self.user.email} - {self.tariff.name}"
+    
+    class Meta:
+        verbose_name = 'История тарифа'
+        verbose_name_plural = 'История тарифов'
