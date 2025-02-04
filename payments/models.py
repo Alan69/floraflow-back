@@ -9,7 +9,7 @@ class Tariff(models.Model):
     info = models.CharField(max_length=512, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.uuid} - {self.name}"
+        return f"{self.name}"
     
     class Meta:
         verbose_name = 'Тариф'
@@ -23,7 +23,7 @@ class TariffHistory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.uuid} - {self.user.email} - {self.tariff.name}"
+        return f"{self.user.email} - {self.tariff.name}"
     
     class Meta:
         verbose_name = 'История тарифа'
