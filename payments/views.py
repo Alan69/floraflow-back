@@ -154,10 +154,10 @@ def initiate_payment(request):
                 type=openapi.TYPE_STRING, 
                 description="The ID of the invoice whose status needs to be checked."
             ),
-            'account_id': openapi.Schema(
-                type=openapi.TYPE_STRING, 
-                description="The ID of the account whose status needs to be checked."
-            ),
+            # 'account_id': openapi.Schema(
+            #     type=openapi.TYPE_STRING, 
+            #     description="The ID of the account whose status needs to be checked."
+            # ),
         },
         required=['invoice_id', 'account_id']
     ),
@@ -195,14 +195,17 @@ def initiate_payment(request):
     }
 )
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def check_payment_status(request):
     """
     View to check the payment status for the provided Invoice ID and update the user's tariff if the payment is successful.
     """
     invoice_id = request.data.get('invoiceId')
-    account_id = request.data.get('accountId')
+    # account_id = request.data.get('accountId')
+    
+    user = request.user
 
-    if not invoice_id or not account_id:
+    if not invoice_id:
         return Response({"error": "Invoice ID, Account ID, and Description are required."}, status=status.HTTP_400_BAD_REQUEST)
 
     # Step 1: Get OAuth Token
@@ -254,13 +257,14 @@ def check_payment_status(request):
 
     if response.status_code == 200:
         response_data = response.json()
+        print(response_data)
         if response_data['TotalCount'] > 0:
             status = response_data['Records'][0].get("status")
             # If payment status is "CHARGED", update user's tariff
             if status == "CHARGED":
                 try:
                     # Find the user by account ID
-                    user = CustomUser.objects.get(uuid=account_id)  # Use accountId to get user
+                    user = CustomUser.objects.get(uuid=user.uuid)  # Use accountId to get user
                 except CustomUser.DoesNotExist:
                     return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
                 
