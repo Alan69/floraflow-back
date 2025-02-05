@@ -247,7 +247,6 @@ def check_payment_status(request):
     """
     View to check the payment status for the provided Invoice ID and update the user's tariff if the payment is successful.
     """
-    # invoice_id = request.data.get('invoice_id')
     
     user = request.user
     invoice_id = user.invoice_id
