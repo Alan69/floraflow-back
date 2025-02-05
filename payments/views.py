@@ -154,10 +154,6 @@ def initiate_payment(request):
                 type=openapi.TYPE_STRING, 
                 description="The ID of the invoice whose status needs to be checked."
             ),
-            # 'account_id': openapi.Schema(
-            #     type=openapi.TYPE_STRING, 
-            #     description="The ID of the account whose status needs to be checked."
-            # ),
         },
         required=['invoice_id', 'account_id']
     ),
@@ -200,7 +196,7 @@ def check_payment_status(request):
     """
     View to check the payment status for the provided Invoice ID and update the user's tariff if the payment is successful.
     """
-    invoice_id = request.data.get('invoiceId')
+    invoice_id = request.data.get('invoice_id')
     
     user = request.user
 
