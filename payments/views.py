@@ -92,6 +92,9 @@ def initiate_payment(request):
     account_id = f"{user.uuid}"
 
     invoice_id = ''.join(char for char in invoice_id if char.isdigit())
+    
+    user.invoice_id = invoice_id
+    user.save()
 
     # Prepare payment data according to the Halyk Bank Invoice Link API
     payment_data = {
@@ -146,37 +149,85 @@ def initiate_payment(request):
 
 @swagger_auto_schema(
     method='post',
-    operation_description="Check the status of a payment link by providing the Invoice ID. The request will return the status of the payment if the invoice is valid.",
-    request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        properties={
-            'invoice_id': openapi.Schema(
-                type=openapi.TYPE_STRING, 
-                description="The ID of the invoice whose status needs to be checked."
-            ),
-        },
-        required=['invoice_id', 'account_id']
-    ),
+    operation_description="Check the status of a payment link for the current user. The request will return the status of the payment if the invoice is valid.",
     responses={
         200: openapi.Response(
             description="Payment status retrieved successfully",
             examples={
                 "application/json": {
-                    "status": "CHARGED",
-                    "invoice_id": "200220241201",
-                    "amount": 400,
-                    "description": "Payment for services",
-                    "created_date": "2024-02-20T15:15:29.289897+06:00",
-                    "expire_date": "2024-02-22T15:15:29.289897+06:00",
-                    "invoice_url": "https://testepay.homebank.kz/api/redirect/invoice-link/39400628-6ebd-4640-9a25-116fb847db37"
+                    "message": "Оплата прошла успешно",
+                    "status": {
+                        "TotalCount": 1,
+                        "Records": [{
+                            "id": "7866f89b-6501-4515-9ba7-6e730443b22f",
+                            "shop_id": "761429bf-a56a-4871-8a14-c5be5f0296e5",
+                            "amount": 1500,
+                            "invoice_id": "20250205101749",
+                            "invoice_alt": "",
+                            "language": "rus",
+                            "currency": "KZT",
+                            "description": "Дневной",
+                            "account_id": "",
+                            "recipient_contact": "test1234@mail.com",
+                            "recipient_contact_sms": "+77085731059",
+                            "notifier_contact": "",
+                            "notifier_contact_sms": "+77085731059",
+                            "expire_period": "1d",
+                            "post_link": "",
+                            "failure_post_link": "",
+                            "back_link": "",
+                            "failure_back_link": "",
+                            "created_date": "2025-02-05T15:17:49.436355+05:00",
+                            "expire_date": "2025-02-06T15:17:49.436355+05:00",
+                            "status": "ACTIVE",
+                            "updated_date": "0001-01-01T05:07:48+05:07",
+                            "invoice_url": "https://epay-api.homebank.kz/redirect/invoice-link/7866f89b-6501-4515-9ba7-6e730443b22f",
+                            "merchant_id": "52425b15-f354-4128-8cb9-de76f2ea614e",
+                            "terminal_id": "2c9b7ad4-c02d-4898-8d00-3295497bbe53",
+                            "card_save": False,
+                            "data": ""
+                        }]
+                    }
                 }
             }
         ),
         400: openapi.Response(
-            description="Invalid Invoice ID",
+            description="Payment not successful or invalid request",
             examples={
                 "application/json": {
-                    "error": "Invoice ID is required."
+                    "error": "Оплата не прошла",
+                    "status": {
+                        "TotalCount": 1,
+                        "Records": [{
+                            "id": "7866f89b-6501-4515-9ba7-6e730443b22f",
+                            "shop_id": "761429bf-a56a-4871-8a14-c5be5f0296e5",
+                            "amount": 1500,
+                            "invoice_id": "20250205101749",
+                            "invoice_alt": "",
+                            "language": "rus",
+                            "currency": "KZT",
+                            "description": "Дневной",
+                            "account_id": "",
+                            "recipient_contact": "test1234@mail.com",
+                            "recipient_contact_sms": "+77085731059",
+                            "notifier_contact": "",
+                            "notifier_contact_sms": "+77085731059",
+                            "expire_period": "1d",
+                            "post_link": "",
+                            "failure_post_link": "",
+                            "back_link": "",
+                            "failure_back_link": "",
+                            "created_date": "2025-02-05T15:17:49.436355+05:00",
+                            "expire_date": "2025-02-06T15:17:49.436355+05:00",
+                            "status": "ACTIVE",
+                            "updated_date": "0001-01-01T05:07:48+05:07",
+                            "invoice_url": "https://epay-api.homebank.kz/redirect/invoice-link/7866f89b-6501-4515-9ba7-6e730443b22f",
+                            "merchant_id": "52425b15-f354-4128-8cb9-de76f2ea614e",
+                            "terminal_id": "2c9b7ad4-c02d-4898-8d00-3295497bbe53",
+                            "card_save": False,
+                            "data": ""
+                        }]
+                    }
                 }
             }
         ),
@@ -196,9 +247,10 @@ def check_payment_status(request):
     """
     View to check the payment status for the provided Invoice ID and update the user's tariff if the payment is successful.
     """
-    invoice_id = request.data.get('invoice_id')
+    # invoice_id = request.data.get('invoice_id')
     
     user = request.user
+    invoice_id = user.invoice_id
 
     if not invoice_id:
         return Response({"error": "Invoice ID is required."}, status=status.HTTP_400_BAD_REQUEST)
