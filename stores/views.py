@@ -128,8 +128,11 @@ class StoreOrderHistoryView(generics.ListAPIView):
         """
         Return all completed or cancelled orders for the current store
         """
+        if self.request.user.user_type != 'store':
+            raise PermissionDenied("Only store users can access order history.")
+            
         return Order.objects.filter(
-            store=self.request.user.store,
+            store=self.request.user,  # Use the user directly instead of user.store
             status__in=['completed', 'cancelled']
         ).order_by('-created_at')
 
