@@ -4,15 +4,15 @@ from .models import StoreProfile, Price
 from orders.serializers import FlowerSerializer, ColorSerializer
 
 class StoreOrderSerializer(serializers.ModelSerializer):
-    client_name = serializers.CharField(source='order.client.first_name', read_only=True)
+    first_name = serializers.CharField(source='order.client.first_name', read_only=True)
     flower = FlowerSerializer(read_only=True)
     color = ColorSerializer(read_only=True)
 
     class Meta:
         model = Order
-        fields = ['uuid', 'client_name', 'flower', 'color', 'flower_height', 
+        fields = ['uuid', 'first_name', 'flower', 'color', 'flower_height', 
                   'quantity', 'decoration', 'recipients_address', 'flower_data']
-        read_only_fields = ['uuid', 'client_name', 'flower', 'color', 'flower_height', 
+        read_only_fields = ['uuid', 'first_name', 'flower', 'color', 'flower_height', 
                             'quantity', 'decoration', 'recipients_address', 'flower_data']
 
 class StoreProfileSerializer(serializers.ModelSerializer):
