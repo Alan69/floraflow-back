@@ -209,7 +209,7 @@ def check_payment_status(request):
         'grant_type': 'password',
         'username': 'avirbox@mail.ru',
         'password': 'bynbo5-Wodjis-rebdor',
-        'scope': 'api',
+        'scope': 'webapi usermanagement email_send verification statement statistics payment',
         'client_id': settings.HALYK_CLIENT_ID,
         'client_secret': settings.HALYK_CLIENT_SECRET
     }
