@@ -18,7 +18,7 @@ class StoreOrdersView(generics.ListAPIView):
 
     def get_queryset(self):
         # Filter orders for the logged-in store
-        return Order.objects.filter(store=self.request.user).order_by('-created_at')
+        return Order.objects.filter(status='pending').order_by('-created_at')
 
 # Endpoint to update order price or send offers
 class StoreOrderUpdateView(generics.CreateAPIView):
