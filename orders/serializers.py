@@ -13,25 +13,13 @@ class ColorSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    client_name = serializers.CharField(source='client.username', read_only=True)
+    
     class Meta:
         model = Order
-        fields = [
-            'uuid', 
-            'flower', 
-            'color', 
-            'flower_height', 
-            'quantity',
-            'decoration',
-            'recipients_address', 
-            'recipients_phone', 
-            'flower_data',
-            'price',
-            'status', 
-            'reason',
-            'created_at', 
-            'updated_at'
-        ]
-        read_only_fields = ['uuid', 'status', 'price', 'reason', 'created_at', 'updated_at']
+        fields = ['uuid', 'client', 'client_name', 'flower', 'color', 'flower_height', 
+                 'quantity', 'decoration', 'recipients_address', 'flower_data']
+        read_only_fields = ['uuid', 'client', 'client_name']  # Make client field read-only
 
     def create(self, validated_data):
         client = self.context['request'].user
