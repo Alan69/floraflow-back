@@ -31,6 +31,7 @@ class StoreProfile(models.Model):
 class Price(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='prices')
+    store = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='store_prices')
     proposed_price = models.DecimalField(max_digits=10, decimal_places=2)
     flower_img = CloudinaryField('flower_img', blank=True, null=True)
     comment = models.TextField(null=True, blank=True)

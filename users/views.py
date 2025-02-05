@@ -121,8 +121,9 @@ class AcceptPriceView(APIView):
         # Mark the price as accepted
         price.is_accepted = True
         price.save()
-
+    
         # Update the order's price
+        price.order.store = price.store
         price.order.price = price.proposed_price
         price.order.save()
 

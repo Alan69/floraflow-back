@@ -70,7 +70,8 @@ class StoreOrderUpdateView(generics.CreateAPIView):
             order=order,
             proposed_price=proposed_price,
             flower_img=flower_img,
-            comment=comment
+            comment=comment,
+            store = request.user
         )
 
         channel_layer = get_channel_layer()
