@@ -120,22 +120,28 @@ class StoreOrderHistoryView(generics.ListAPIView):
     """
     API endpoint that allows stores to view their order history.
     
-    Returns a list of completed or cancelled orders for the authenticated store.
+    Returns a list of orders for the authenticated store with various status types.
     """
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         """
-        Return all completed or cancelled orders for the current store
+        Return all orders for the current store
         """
         if self.request.user.user_type != 'store':
             raise PermissionDenied("Only store users can access order history.")
             
-        return Order.objects.filter(
-            store=self.request.user,  # Use the user directly instead of user.store
-            status__in=['completed', 'cancelled']
-        ).order_by('-created_at')
+        # Get status filter from query params, default to all statuses if not specified
+        status = self.request.query_params.get('status')
+        
+        queryset = Order.objects.filter(store=self.request.user)
+        
+        # If status parameter is provided, filter by it
+        if status:
+            queryset = queryset.filter(status=status)
+            
+        return queryset.order_by('-created_at')
 
 class StoreOrderStatusView(APIView):
     """
