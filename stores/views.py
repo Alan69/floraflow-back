@@ -119,12 +119,30 @@ class StoreProfileUpdateView(generics.RetrieveUpdateAPIView):
 class StoreOrderHistoryView(generics.ListAPIView):
     """
     API endpoint that allows stores to view their order history.
-    
-    Returns a list of orders for the authenticated store with various status types.
-    Supports filtering by status: pending, accepted, in_transit, completed, canceled
     """
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_description="Get store order history with optional status filtering",
+        manual_parameters=[
+            openapi.Parameter(
+                'status',
+                openapi.IN_QUERY,
+                description="Filter orders by status. Use 'all' for all orders.",
+                type=openapi.TYPE_STRING,
+                enum=['all', 'pending', 'accepted', 'in_transit', 'completed', 'canceled'],
+                default='all'
+            ),
+        ],
+        responses={
+            200: OrderSerializer(many=True),
+            403: "Permission denied - Only store users can access order history",
+            400: "Invalid status parameter"
+        }
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         """
