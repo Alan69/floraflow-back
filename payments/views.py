@@ -201,12 +201,11 @@ def check_payment_status(request):
     View to check the payment status for the provided Invoice ID and update the user's tariff if the payment is successful.
     """
     invoice_id = request.data.get('invoiceId')
-    # account_id = request.data.get('accountId')
     
     user = request.user
 
     if not invoice_id:
-        return Response({"error": "Invoice ID, Account ID, and Description are required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Invoice ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
     # Step 1: Get OAuth Token
     oauth_url = 'https://epay-oauth.homebank.kz/oauth2/token'
@@ -259,30 +258,26 @@ def check_payment_status(request):
         response_data = response.json()
         print(response_data)
         if response_data['TotalCount'] > 0:
-            status = response_data['Records'][0].get("status")
+            payment_status = response_data['Records'][0].get("status")
             # If payment status is "CHARGED", update user's tariff
-            if status == "CHARGED":
+            if payment_status == "CHARGED":
                 try:
                     # Find the user by account ID
-                    user = CustomUser.objects.get(uuid=user.uuid)  # Use accountId to get user
+                    user = CustomUser.objects.get(uuid=user.uuid)
                 except CustomUser.DoesNotExist:
                     return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
                 
                 description = response_data['Records'][0].get("description")
-                # Update the user's tariff
                 try:
                     tariff = Tariff.objects.get(name=description)
                 except Tariff.DoesNotExist:
                     return Response({"error": "Tariff not found"}, status=status.HTTP_404_NOT_FOUND)
 
-                # Set the tariff to active if the payment is successful
                 user.tariff = tariff
-                user.save()  # Save the user after attaching the tariff to ensure it's linked
+                user.save()
 
-                # return HttpResponseRedirect(f"https://aimmagic.com/post-query")
-
-            # Return payment status if not "CHARGED"
-            return Response(status=status.HTTP_200_OK)
+            # Return the payment status in the response
+            return Response({"status": payment_status}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "No records found for the provided Invoice ID."}, status=status.HTTP_404_NOT_FOUND)
     
