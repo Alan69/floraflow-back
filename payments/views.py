@@ -252,7 +252,6 @@ def check_payment_status(request):
 
     if response.status_code == 200:
         response_data = response.json()
-        print(response_data)
         if response_data['TotalCount'] > 0:
             payment_status = response_data['Records'][0].get("status")
             # If payment status is "CHARGED", update user's tariff
@@ -271,9 +270,9 @@ def check_payment_status(request):
 
                 user.tariff = tariff
                 user.save()
-
-            # Return the payment status in the response
-            return Response({"status": payment_status}, status=status.HTTP_200_OK)
+                return Response({"message": "Оплата прошла успешно", "status": response_data}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Оплата не прошла", "status": response_data}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"error": "No records found for the provided Invoice ID."}, status=status.HTTP_404_NOT_FOUND)
     
