@@ -124,10 +124,6 @@ def initiate_payment(request):
     # Step 3: Send the request to Halyk Bank's payment API
     response = requests.post('https://epay-api.homebank.kz/invoice', data=json.dumps(payment_data), headers=headers)
 
-    # Debugging: Log the raw response content and status code
-    print("Response Status Code:", response.status_code)
-    print("Response Content:", response.text)
-
     if response.status_code == 200:
         try:
             response_data = response.json()
