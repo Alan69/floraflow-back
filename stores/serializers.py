@@ -4,7 +4,7 @@ from .models import StoreProfile, Price
 from orders.serializers import FlowerSerializer, ColorSerializer
 
 class StoreOrderSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(source='order.client.first_name', read_only=True)
+    first_name = serializers.CharField(source='client.first_name', read_only=True)
     flower = FlowerSerializer(read_only=True)
     color = ColorSerializer(read_only=True)
 
