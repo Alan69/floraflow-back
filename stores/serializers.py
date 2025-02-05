@@ -1,9 +1,12 @@
 from rest_framework import serializers
 from orders.models import Order
 from .models import StoreProfile, Price
+from orders.serializers import FlowerSerializer, ColorSerializer
 
 class StoreOrderSerializer(serializers.ModelSerializer):
     client_name = serializers.CharField(source='client.username', read_only=True)
+    flower = FlowerSerializer(read_only=True)
+    color = ColorSerializer(read_only=True)
 
     class Meta:
         model = Order
