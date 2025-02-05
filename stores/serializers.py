@@ -4,15 +4,13 @@ from .models import StoreProfile, Price
 
 class StoreOrderSerializer(serializers.ModelSerializer):
     client_name = serializers.CharField(source='client.username', read_only=True)
-    prices = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
-        fields = ['uuid', 'client_name', 'flower_data', 'price', 'status', 'created_at', 'updated_at', 'prices']
-        read_only_fields = ['uuid', 'client_name', 'flower_data', 'status', 'created_at', 'updated_at']
-
-    def get_prices(self, obj):
-        return PriceSerializer(obj.prices.all(), many=True).data
+        fields = ['uuid', 'client_name', 'flower', 'color', 'flower_height', 
+                  'quantity', 'decoration', 'recipients_address', 'flower_data']
+        read_only_fields = ['uuid', 'client_name', 'flower', 'color', 'flower_height', 
+                            'quantity', 'decoration', 'recipients_address', 'flower_data']
 
 class StoreProfileSerializer(serializers.ModelSerializer):
     class Meta:
