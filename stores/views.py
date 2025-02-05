@@ -12,6 +12,8 @@ from channels.layers import get_channel_layer
 from django.utils import timezone
 from orders.serializers import OrderSerializer
 from rest_framework.views import APIView
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # Endpoint to view client orders
 class StoreOrdersView(generics.ListAPIView):
@@ -137,6 +139,43 @@ class StoreOrderStatusView(APIView):
     """
     permission_classes = [IsAuthenticated]
     
+    @swagger_auto_schema(
+        operation_description="Update the status of a specific order",
+        manual_parameters=[
+            openapi.Parameter(
+                'order_id',
+                openapi.IN_PATH,
+                description="ID of the order to update",
+                type=openapi.TYPE_INTEGER,
+                required=True
+            ),
+        ],
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['status'],
+            properties={
+                'status': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    enum=['accepted', 'in_progress', 'ready', 'completed', 'cancelled'],
+                    description="New status for the order"
+                ),
+            }
+        ),
+        responses={
+            200: openapi.Response(
+                description="Order status updated successfully",
+                examples={
+                    "application/json": {
+                        "message": "Order status updated successfully",
+                        "status": "accepted"
+                    }
+                }
+            ),
+            400: "Invalid status or missing status",
+            403: "Permission denied",
+            404: "Order not found"
+        }
+    )
     def patch(self, request, order_id):
         """
         Update the status of a specific order.
