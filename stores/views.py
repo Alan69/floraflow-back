@@ -10,6 +10,8 @@ from stores.tasks import cancel_price_if_expired
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.utils import timezone
+from orders.serializers import OrderSerializer
+from rest_framework.views import APIView
 
 # Endpoint to view client orders
 class StoreOrdersView(generics.ListAPIView):
@@ -110,3 +112,85 @@ class StoreProfileUpdateView(generics.RetrieveUpdateAPIView):
             return self.request.user.store_profile
         except AttributeError:
             raise PermissionDenied("Ни один профиль магазина не связан с этим пользователем..")
+
+class StoreOrderHistoryView(generics.ListAPIView):
+    """
+    API endpoint that allows stores to view their order history.
+    
+    Returns a list of completed or cancelled orders for the authenticated store.
+    """
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Return all completed or cancelled orders for the current store
+        """
+        return Order.objects.filter(
+            store=self.request.user.store,
+            status__in=['completed', 'cancelled']
+        ).order_by('-created_at')
+
+class StoreOrderStatusView(APIView):
+    """
+    API endpoint that allows stores to update the status of their orders.
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def patch(self, request, order_id):
+        """
+        Update the status of a specific order.
+
+        Parameters:
+            - order_id (int): The ID of the order to update
+            - status (str): The new status for the order. Must be one of:
+                * accepted
+                * in_progress
+                * ready
+                * completed
+                * cancelled
+
+        Returns:
+            - 200: Order status updated successfully
+            - 400: Invalid status or missing status
+            - 403: Permission denied
+            - 404: Order not found
+        """
+        try:
+            order = Order.objects.get(id=order_id)
+            new_status = request.data.get('status')
+            
+            if not new_status:
+                return Response(
+                    {'error': 'Status is required'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Validate status is one of the allowed values
+            allowed_statuses = ['accepted', 'in_progress', 'ready', 'completed', 'cancelled']
+            if new_status not in allowed_statuses:
+                return Response(
+                    {'error': f'Invalid status. Must be one of: {", ".join(allowed_statuses)}'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Check if the store owns this order
+            if order.store != request.user.store:
+                return Response(
+                    {'error': 'You do not have permission to update this order'}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
+            order.status = new_status
+            order.save()
+            
+            return Response({
+                'message': 'Order status updated successfully',
+                'status': new_status
+            })
+            
+        except Order.DoesNotExist:
+            return Response(
+                {'error': 'Order not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
