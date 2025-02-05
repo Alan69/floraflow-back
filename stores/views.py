@@ -35,12 +35,22 @@ class StoreOrderUpdateView(generics.CreateAPIView):
         if request.user.user_type != 'store':
             raise ValidationError("Только магазины могут предлагать цены.")
 
+        # Ensure the store has a profile
+        try:
+            store_profile = request.user.store_profile
+        except AttributeError:
+            raise ValidationError("У магазина должен быть настроен профиль для предложения цен.")
+
         # Get the `order_id` from the URL
         order_id = kwargs.get('order_id')
 
-        # Validate if the order exists and belongs to the store
+        # Validate if the order exists
         try:
             order = Order.objects.get(uuid=order_id)
+            # Associate the store with the order if not already set
+            if not order.store:
+                order.store = request.user
+                order.save()
         except Order.DoesNotExist:
             return Response({"error": "Заказ не найден."}, status=status.HTTP_404_NOT_FOUND)
 
