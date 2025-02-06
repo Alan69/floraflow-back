@@ -83,6 +83,31 @@ class OrderHistorySerializer(serializers.ModelSerializer):
             'updated_at',
             'rating'
         ]
+        
+class OrderStoreHistorySerializer(serializers.ModelSerializer):
+    flower = FlowerSerializerText()
+    color = ColorSerializerText()
+
+    class Meta:
+        model = Order
+        fields = [
+            'uuid', 
+            'flower', 
+            'color', 
+            'flower_height', 
+            'quantity', 
+            'decoration',
+            'city', 
+            'recipients_address', 
+            'recipients_phone', 
+            'flower_data', 
+            'price', 
+            'status', 
+            'reason',
+            'created_at', 
+            'updated_at',
+            'rating'
+        ]
 
 class OrderRatingSerializer(serializers.ModelSerializer):
     class Meta:

@@ -10,7 +10,7 @@ from stores.tasks import cancel_price_if_expired
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.utils import timezone
-from orders.serializers import OrderSerializer
+from orders.serializers import OrderSerializer, OrderStoreHistorySerializer
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -120,7 +120,7 @@ class StoreOrderHistoryView(generics.ListAPIView):
     """
     API endpoint that allows stores to view their order history.
     """
-    serializer_class = OrderSerializer
+    serializer_class = OrderStoreHistorySerializer
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
@@ -136,7 +136,7 @@ class StoreOrderHistoryView(generics.ListAPIView):
             ),
         ],
         responses={
-            200: OrderSerializer(many=True),
+            200: OrderStoreHistorySerializer(many=True),
             403: "Permission denied - Only store users can access order history",
             400: "Invalid status parameter"
         }
