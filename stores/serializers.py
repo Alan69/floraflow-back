@@ -26,6 +26,12 @@ class PriceSerializer(serializers.ModelSerializer):
     logo = serializers.ImageField(source='store.store_profile.logo', read_only=True)
     instagram_link = serializers.URLField(source='store.store_profile.instagram_link', read_only=True)
     whatsapp_number = serializers.CharField(source='store.store_profile.whatsapp_number', read_only=True)
+    flower_img = serializers.SerializerMethodField()
+
+    def get_flower_img(self, obj):
+        if obj.flower_img:
+            return obj.flower_img.url
+        return None
 
     class Meta:
         model = Price
