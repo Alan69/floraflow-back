@@ -164,6 +164,38 @@ class UserProposedPriceListView(generics.ListAPIView):
 class CancelPriceView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        operation_description="Cancel a price proposal",
+        responses={
+            200: openapi.Response('Success', schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'detail': openapi.Schema(type=openapi.TYPE_STRING, example="Ценовое предложение успешно отменено.")
+                }
+            )),
+            403: openapi.Response('Forbidden', schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'error': openapi.Schema(type=openapi.TYPE_STRING, example="У вас нет разрешения отменить это ценовое предложение.")
+                }
+            )),
+            404: openapi.Response('Not Found', schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'error': openapi.Schema(type=openapi.TYPE_STRING, example="Ценовое предложение не найдено или уже принято.")
+                }
+            ))
+        },
+        manual_parameters=[
+            openapi.Parameter(
+                'price_id',
+                openapi.IN_PATH,
+                description="UUID of the price proposal to cancel",
+                type=openapi.TYPE_STRING,
+                required=True
+            )
+        ]
+    )
     def post(self, request, *args, **kwargs):
         price_id = kwargs.get('price_id')
         try:
