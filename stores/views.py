@@ -124,21 +124,20 @@ class StoreOrderHistoryView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
-        operation_description="Get store order history with optional status filtering",
+        operation_description="Get store order history filtered by relevance",
         manual_parameters=[
             openapi.Parameter(
-                'status',
+                'isRelevant',
                 openapi.IN_QUERY,
-                description="Filter orders by status. Use 'all' for all orders.",
-                type=openapi.TYPE_STRING,
-                enum=['all', 'pending', 'accepted', 'in_transit', 'completed', 'canceled'],
-                default='all'
+                description="Filter orders by relevance. True for active orders (pending, accepted, in_transit), False for completed/canceled orders",
+                type=openapi.TYPE_BOOLEAN,
+                required=False,
+                default=None
             ),
         ],
         responses={
             200: OrderStoreHistorySerializer(many=True),
             403: "Permission denied - Only store users can access order history",
-            400: "Invalid status parameter"
         }
     )
     def get(self, request, *args, **kwargs):
@@ -146,23 +145,24 @@ class StoreOrderHistoryView(generics.ListAPIView):
 
     def get_queryset(self):
         """
-        Return filtered orders for the current store based on status
+        Return filtered orders for the current store based on relevance
         """
         if self.request.user.user_type != 'store':
             raise PermissionDenied("Only store users can access order history.")
             
-        # Get status filter from query params
-        status = self.request.query_params.get('status', 'all')
+        # Get isRelevant filter from query params
+        is_relevant = self.request.query_params.get('isRelevant')
         
         # Base queryset
         queryset = Order.objects.filter(store=self.request.user)
         
-        # Filter by status if a valid status is provided
-        if status != 'all':
-            if status in dict(Order.STATUS_CHOICES):
-                queryset = queryset.filter(status=status)
+        # Filter based on isRelevant parameter
+        if is_relevant is not None:
+            is_relevant = is_relevant.lower() == 'true'
+            if is_relevant:
+                queryset = queryset.filter(status__in=['pending', 'accepted', 'in_transit'])
             else:
-                raise ValidationError(f"Invalid status. Must be one of: {', '.join(dict(Order.STATUS_CHOICES).keys())}")
+                queryset = queryset.filter(status__in=['completed', 'canceled'])
             
         return queryset.order_by('-created_at')
 
