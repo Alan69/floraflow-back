@@ -87,6 +87,9 @@ class OrderHistorySerializer(serializers.ModelSerializer):
 class OrderStoreHistorySerializer(serializers.ModelSerializer):
     flower = FlowerSerializerText()
     color = ColorSerializerText()
+    proposed_price = serializers.SerializerMethodField()
+    comment = serializers.SerializerMethodField()
+    first_name = serializers.CharField(source='client.first_name', read_only=True)
 
     class Meta:
         model = Order
@@ -100,14 +103,24 @@ class OrderStoreHistorySerializer(serializers.ModelSerializer):
             'city', 
             'recipients_address', 
             'recipients_phone', 
-            'flower_data', 
-            'price', 
+            'flower_data',
             'status', 
             'reason',
             'created_at', 
             'updated_at',
-            'rating'
+            'rating',
+            'proposed_price',
+            'comment',
+            'first_name'
         ]
+
+    def get_proposed_price(self, obj):
+        price = obj.prices.first()  # Get the first price proposal
+        return price.proposed_price if price else None
+
+    def get_comment(self, obj):
+        price = obj.prices.first()  # Get the first price proposal
+        return price.comment if price else None
 
 class OrderRatingSerializer(serializers.ModelSerializer):
     class Meta:
