@@ -107,6 +107,38 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class AcceptPriceView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        operation_description="Accept a price proposal for an order",
+        responses={
+            200: openapi.Response('Success', schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'detail': openapi.Schema(type=openapi.TYPE_STRING, example="Цена успешно принята.")
+                }
+            )),
+            403: openapi.Response('Forbidden', schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'error': openapi.Schema(type=openapi.TYPE_STRING, example="У вас нет разрешения принять эту цену.")
+                }
+            )),
+            404: openapi.Response('Not Found', schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'error': openapi.Schema(type=openapi.TYPE_STRING, example="Ценовое предложение не найдено или уже принято.")
+                }
+            ))
+        },
+        manual_parameters=[
+            openapi.Parameter(
+                'price_id',
+                openapi.IN_PATH,
+                description="UUID of the price proposal to accept",
+                type=openapi.TYPE_STRING,
+                required=True
+            )
+        ]
+    )
     def post(self, request, *args, **kwargs):
         price_id = kwargs.get('price_id')  # Extract the price ID from the URL
         try:
