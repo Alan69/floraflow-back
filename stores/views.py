@@ -60,8 +60,9 @@ class StoreOrderUpdateView(generics.CreateAPIView):
 
         # Extract the proposed price from the request data
         proposed_price = request.data.get('proposed_price')
-        flower_img = request.data.get('flower_img')  # Get flower_img if provided
-        comment = request.data.get('comment')  # Get comment if provided
+        flower_img = request.FILES.get('flower_img')  # Get from FILES instead of data
+        comment = request.data.get('comment')
+
         if not proposed_price:
             return Response({"error": "Предложенная цена обязательна."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -69,27 +70,10 @@ class StoreOrderUpdateView(generics.CreateAPIView):
         price = Price.objects.create(
             order=order,
             proposed_price=proposed_price,
-            flower_img=flower_img,
+            flower_img=flower_img if flower_img else None,  # Handle None case explicitly
             comment=comment,
-            store = request.user
+            store=request.user
         )
-
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            f"user_{order.client.uuid}",
-            {
-                "type": "send_notification",
-                "data": {
-                    "event": "price_proposed",
-                    "price_id": str(price.uuid),
-                    "proposed_price": str(price.proposed_price),
-                    "order_id": str(order.uuid),
-                },
-            }
-        )
-
-        # Schedule a Celery task to check and cancel the proposal after 1 minute
-        cancel_price_if_expired.apply_async((price.uuid,), countdown=60)
 
         # Return a success response
         return Response(
