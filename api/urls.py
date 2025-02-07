@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from users.views import (
+    CancelPriceView,
     UserRegistrationView,
     UserProfileView,
     UserChangePasswordView,
@@ -50,6 +51,7 @@ urlpatterns = [
     path('password/change/', UserChangePasswordView.as_view(), name='change_password'),
     path('me/', UserProfileView.as_view(), name='user_profile'),
     path('client/prices/<uuid:price_id>/accept/', AcceptPriceView.as_view(), name='accept-price'),
+    path('client/prices/<uuid:price_id>/cancel/', CancelPriceView.as_view(), name='cancel-price'),
     path('client/proposed-prices/', UserProposedPriceListView.as_view(), name='user-propose-prices'),
     path('client/<uuid:order_uuid>/cancel/', CancelOrderView.as_view(), name='cancel-order'),
     path('client/order/<uuid:uuid>/', OrderDetailView.as_view(), name='order_by_id'),

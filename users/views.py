@@ -160,3 +160,32 @@ class UserProposedPriceListView(generics.ListAPIView):
 
         # Otherwise, return an empty queryset (e.g., for admins or invalid types)
         return Price.objects.none()
+
+class CancelPriceView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        price_id = kwargs.get('price_id')
+        try:
+            price = Price.objects.get(uuid=price_id, is_accepted=False)
+        except Price.DoesNotExist:
+            return Response(
+                {"error": "Ценовое предложение не найдено или уже принято."}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Check if the user has permission to cancel this price
+        # Either the store who proposed it or the client who received it
+        if request.user != price.store and request.user != price.order.client:
+            return Response(
+                {"error": "У вас нет разрешения отменить это ценовое предложение."}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Delete the price proposal
+        price.delete()
+
+        return Response(
+            {"detail": "Ценовое предложение успешно отменено."}, 
+            status=status.HTTP_200_OK
+        )
