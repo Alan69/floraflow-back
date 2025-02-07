@@ -183,13 +183,23 @@ class UserProposedPriceListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
 
-        # If the user is a store, return prices they proposed
-        if user.user_type == 'store':
-            return Price.objects.filter(order__store=user)
+        # If user has no current order, return empty queryset
+        if not user.current_order:
+            return Price.objects.none()
 
-        # If the user is a client, return prices proposed for their orders
+        # If the user is a store, return prices they proposed for the current order
+        if user.user_type == 'store':
+            return Price.objects.filter(
+                order=user.current_order,
+                store=user
+            )
+
+        # If the user is a client, return prices proposed for their current order
         elif user.user_type == 'client':
-            return Price.objects.filter(order__client=user)
+            return Price.objects.filter(
+                order=user.current_order,
+                order__client=user
+            )
 
         # Otherwise, return an empty queryset (e.g., for admins or invalid types)
         return Price.objects.none()
