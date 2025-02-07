@@ -157,6 +157,7 @@ class AcceptPriceView(APIView):
         # Update the order's price
         price.order.store = price.store
         price.order.price = price.proposed_price
+        price.order.status = 'accepted'
         price.order.save()
 
         return Response({"detail": "Цена успешно принята."}, status=status.HTTP_200_OK)
