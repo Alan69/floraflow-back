@@ -118,6 +118,8 @@ class CancelOrderView(APIView):
     def post(self, request, order_uuid):
         # Fetch the order by UUID
         order = get_object_or_404(Order, uuid=order_uuid)
+        
+        user = request.user
 
         # Check if the order is already canceled or completed
         if order.status in ['canceled', 'completed']:
@@ -135,6 +137,8 @@ class CancelOrderView(APIView):
             )
 
         # Update the order status and add the cancellation reason
+        user.current_order = None
+        user.save()
         order.status = 'canceled'
         order.reason = reason  # Save the reason to the new field
         order.save()

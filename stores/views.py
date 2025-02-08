@@ -238,6 +238,15 @@ class StoreOrderStatusView(APIView):
             order.status = new_status
             order.save()
             
+            if new_status == 'in_transit':
+                order.client.current_order = order
+                order.client.save()
+            
+            if new_status == 'completed':
+                order.client.current_order = None
+                order.client.save()
+        
+            
             return Response({
                 'message': 'Order status updated successfully',
                 'status': new_status
