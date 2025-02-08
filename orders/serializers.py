@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from stores.serializers import StoreProfileSerializer
-from .models import Order, Flower, Color
+from .models import Order
 from common.serializers import FlowerSerializer, ColorSerializer, FlowerSerializerText, ColorSerializerText
 
 

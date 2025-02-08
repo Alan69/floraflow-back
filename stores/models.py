@@ -12,7 +12,7 @@ class StoreProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='store_profile')
     store_name = models.CharField(max_length=255, blank=True, null=True)
     logo = models.ImageField(upload_to='store_logos/', blank=True, null=True)
-    address = models.TextField()
+    address = models.TextField(blank=True, null=True)
     instagram_link = models.URLField(blank=True, null=True)
     twogis = models.URLField(blank=True, null=True)
     whatsapp_number = models.CharField(max_length=20, blank=True, null=True)
