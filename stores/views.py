@@ -173,7 +173,7 @@ class StoreOrderStatusView(APIView):
             properties={
                 'status': openapi.Schema(
                     type=openapi.TYPE_STRING,
-                    enum=['accepted', 'in_progress', 'ready', 'completed', 'cancelled'],
+                    enum=['accepted', 'in_transit', 'completed'],
                     description="New status for the order"
                 ),
             }
@@ -200,11 +200,9 @@ class StoreOrderStatusView(APIView):
         Parameters:
             - order_id (int): The ID of the order to update
             - status (str): The new status for the order. Must be one of:
-                * accepted
-                * in_progress
-                * ready
-                * completed
-                * cancelled
+                * accepted (Заказ принят)
+                * in_transit (В пути)
+                * completed (Доставлен)
 
         Returns:
             - 200: Order status updated successfully
@@ -223,7 +221,7 @@ class StoreOrderStatusView(APIView):
                 )
             
             # Validate status is one of the allowed values
-            allowed_statuses = ['accepted', 'in_progress', 'ready', 'completed', 'cancelled']
+            allowed_statuses = ['accepted', 'in_transit', 'completed']
             if new_status not in allowed_statuses:
                 return Response(
                     {'error': f'Invalid status. Must be one of: {", ".join(allowed_statuses)}'}, 
@@ -231,7 +229,7 @@ class StoreOrderStatusView(APIView):
                 )
             
             # Check if the store owns this order
-            if order.store != request.user.store:
+            if order.store != request.user:
                 return Response(
                     {'error': 'You do not have permission to update this order'}, 
                     status=status.HTTP_403_FORBIDDEN
