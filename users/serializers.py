@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import CustomUser
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from orders.serializers import OrderSerializerDetail
+from orders.serializers import OrderSerializerDetailMe
 from payments.serializers import TariffSerializer
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for retrieving and updating user profile."""
     profile_picture = serializers.SerializerMethodField()
-    current_order = OrderSerializerDetail(read_only=True)
+    current_order = OrderSerializerDetailMe(read_only=True)
     tariff = TariffSerializer(read_only=True)
 
     class Meta:
