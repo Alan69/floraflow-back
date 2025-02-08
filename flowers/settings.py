@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'orders',
     'api',
     'payments',
+    'common',
 ]
 
 MIDDLEWARE = [

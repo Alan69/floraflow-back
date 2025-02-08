@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from orders.models import Order
 from .models import StoreProfile, Price
-from orders.serializers import FlowerSerializer, ColorSerializer
+from common.serializers import FlowerSerializer, ColorSerializer
 
 class StoreOrderSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source='client.first_name', read_only=True)
