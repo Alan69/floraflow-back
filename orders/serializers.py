@@ -16,9 +16,8 @@ class ColorSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    flower = FlowerSerializer(read_only=True)
-    color = ColorSerializer(read_only=True)
-
+    client_name = serializers.CharField(source='client.username', read_only=True)
+    
     class Meta:
         model = Order
         fields = ['uuid', 'client', 'client_name', 'flower', 'color', 'flower_height', 
