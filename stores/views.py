@@ -211,7 +211,7 @@ class StoreOrderStatusView(APIView):
             - 404: Order not found
         """
         try:
-            order = Order.objects.get(id=order_id)
+            order = Order.objects.get(uuid=order_id)
             new_status = request.data.get('status')
             
             if not new_status:
