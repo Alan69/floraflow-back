@@ -175,9 +175,9 @@ class UserProposedPriceListView(generics.ListAPIView):
     serializer_class = PriceSerializer
     permission_classes = [IsAuthenticated]
     # pagination_class = CustomPagination
-    filter_backends = [DjangoFilterBackend, OrderingFilter]  # Add filtering and ordering backends
-    filterset_class = PriceFilter  # Fields you want to filter by
-    ordering_fields = ['created_at', 'updated_at', 'proposed_price']  # Fields you can order by
+    # filter_backends = [DjangoFilterBackend, OrderingFilter]  # Add filtering and ordering backends
+    # filterset_class = PriceFilter  # Fields you want to filter by
+    # ordering_fields = ['created_at', 'updated_at', 'proposed_price']  # Fields you can order by
     ordering = ['-created_at']  # Default ordering
 
     def get_queryset(self):
