@@ -40,3 +40,43 @@ class PriceSerializer(serializers.ModelSerializer):
                  'created_at', 'updated_at', 'expires_at', 'store_name', 'logo', 
                  'instagram_link', 'whatsapp_number']
         read_only_fields = ['uuid', 'is_accepted', 'expires_at', 'created_at', 'updated_at']
+
+    def get_flower_img(self, obj):
+        if obj.flower_img:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.flower_img.url)
+        return None
+
+class PriceSerializerMe(serializers.ModelSerializer):
+    flower_img = serializers.SerializerMethodField()
+    store_name = serializers.CharField(source='store.first_name', read_only=True)
+    logo = serializers.SerializerMethodField()
+    instagram_link = serializers.SerializerMethodField()
+    whatsapp_number = serializers.CharField(source='store.phone', read_only=True)
+
+    class Meta:
+        model = Price
+        fields = ['uuid', 'proposed_price', 'flower_img', 'comment', 
+                 'created_at', 'updated_at', 'expires_at', 'store_name', 'logo', 
+                 'instagram_link', 'whatsapp_number']
+        read_only_fields = ['uuid', 'expires_at', 'created_at', 'updated_at']
+
+    def get_flower_img(self, obj):
+        if obj.flower_img:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.flower_img.url)
+        return None
+
+    def get_logo(self, obj):
+        if hasattr(obj.store, 'store_profile') and obj.store.store_profile.logo:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.store.store_profile.logo.url)
+        return None
+
+    def get_instagram_link(self, obj):
+        if hasattr(obj.store, 'store_profile'):
+            return obj.store.store_profile.instagram_link
+        return None
