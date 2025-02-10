@@ -84,8 +84,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         super().save(*args, **kwargs)
         SIZE = 250, 250
 
-        if self.picture:
-            pic = Image.open(self.picture.path)
+        if self.profile_picture:
+            pic = Image.open(self.profile_picture.path)
             if pic.mode == 'RGBA':
                 alpha = pic.getchannel('A')
                 alpha = ImageOps.invert(alpha)
@@ -94,7 +94,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                 pic = pic.convert('RGB')
 
             pic.thumbnail(SIZE, Image.LANCZOS)
-            pic.save(self.picture.path)
+            pic.save(self.profile_picture.path)
 
     def __str__(self):
         return f"{self.email} ({self.user_type})"
