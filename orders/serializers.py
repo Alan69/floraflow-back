@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from stores.serializers import PriceSerializerMe, StoreProfileSerializer
+from stores.serializers import PriceSerializerMe
 from .models import Order
 from common.serializers import FlowerSerializer, ColorSerializer, FlowerSerializerText, ColorSerializerText
 
@@ -44,7 +44,7 @@ class OrderSerializerDetail(serializers.ModelSerializer):
 class OrderSerializerDetailMe(serializers.ModelSerializer):
     flower = FlowerSerializer(read_only=True)
     color = ColorSerializer(read_only=True)
-    price = PriceSerializerMe(read_only=True)
+    prices = PriceSerializerMe(read_only=True, many=True)
     
     class Meta:
         model = Order
@@ -60,6 +60,7 @@ class OrderSerializerDetailMe(serializers.ModelSerializer):
             'flower_data',
             'store',
             'price',
+            'prices',
             'status', 
             'reason',
             'created_at', 
