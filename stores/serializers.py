@@ -26,7 +26,7 @@ class PriceSerializer(serializers.ModelSerializer):
     logo = serializers.ImageField(source='store.store_profile.logo', read_only=True)
     instagram_link = serializers.URLField(source='store.store_profile.instagram_link', read_only=True)
     whatsapp_number = serializers.CharField(source='store.store_profile.whatsapp_number', read_only=True)
-    flower_img = serializers.ImageField(required=False)
+    flower_img = serializers.SerializerMethodField()
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

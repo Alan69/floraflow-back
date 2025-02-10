@@ -50,23 +50,25 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('password/change/', UserChangePasswordView.as_view(), name='change_password'),
     path('me/', UserProfileView.as_view(), name='user_profile'),
+    
+    # client prices
     path('client/prices/<uuid:price_id>/accept/', AcceptPriceView.as_view(), name='accept-price'),
     path('client/prices/<uuid:price_id>/cancel/', CancelPriceView.as_view(), name='cancel-price'),
     path('client/proposed-prices/', UserProposedPriceListView.as_view(), name='user-propose-prices'),
-    path('client/<uuid:order_uuid>/cancel/', CancelOrderView.as_view(), name='cancel-order'),
-    path('client/order/<uuid:uuid>/', OrderDetailView.as_view(), name='order_by_id'),
 
-    # stores
+    # stores orders
     path('store/orders/', StoreOrdersView.as_view(), name='store_orders'),
     path('store/propose-price/<uuid:order_id>/', StoreOrderUpdateView.as_view(), name='propose-price'),
     path('store/profile/', StoreProfileUpdateView.as_view(), name='store_profile_update'),
     path('store/history/', StoreOrderHistoryView.as_view(), name='store_order_history'),
     path('store/order-status/<uuid:order_id>/', StoreOrderStatusView.as_view(), name='store_order_status'),
 
-    # user orders
+    # clien orders
     path('client/order/', OrderCreateView.as_view(), name='order_create'),
     path('client/order-history/', OrderHistoryView.as_view(), name='order_history'),
     path('client/order/<uuid:pk>/rate/', RateStoreView.as_view(), name='rate-store'),
+    path('client/<uuid:order_uuid>/cancel/', CancelOrderView.as_view(), name='cancel-order'),
+    path('client/order/<uuid:uuid>/', OrderDetailView.as_view(), name='order_by_id'),
 
     # order data
     path('flowers/', FlowerListView.as_view(), name='flower-list'),

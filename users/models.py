@@ -4,7 +4,6 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.conf import settings
 import os
 from PIL import Image, ImageOps
-from cloudinary.models import CloudinaryField
 from payments.models import Tariff
 
 def user_directory_path_profile(instance, filename):
@@ -16,6 +15,11 @@ def user_directory_path_profile(instance, filename):
         os.remove(full_path)
 
     return profile_pic_name
+
+def user_profile_path(instance, filename):
+    # Generate path for profile pictures
+    ext = filename.split('.')[-1]
+    return f'users/{instance.uuid}/profile.{ext}'
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -62,8 +66,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='client', verbose_name="Тип пользователя")
     phone = models.CharField(max_length=15, unique=True, verbose_name="Номер телефона")
     city = models.CharField(max_length=50, choices=CITY_CHOICES, default='Astana', verbose_name='Город')
-    picture = models.ImageField(upload_to=user_directory_path_profile, blank=True, null=True, verbose_name='Аватар')
-    profile_picture = CloudinaryField('profile_picture', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to=user_profile_path, blank=True, null=True, verbose_name='Аватар')
 
     current_order = models.ForeignKey('orders.Order', on_delete=models.SET_NULL, null=True, blank=True, related_name='users_with_current_order')
     tariff = models.ForeignKey(Tariff, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Тариф")

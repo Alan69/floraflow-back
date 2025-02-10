@@ -35,11 +35,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['email', 'current_order', 'tariff']  # Prevent updating email and user type
 
     def get_profile_picture(self, obj):
-        """Return the full URL for the profile picture."""
-        if obj.profile_picture:
-            # Build the full URL using Cloudinary utilities
-            return f"https://res.cloudinary.com/dwbv1fvgp/image/upload/v1736420569/{obj.profile_picture}"
-        return None  # Return None if no picture is uploaded
+        if obj.picture:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.picture.url)
+        return None
 
 
 class UserChangePasswordSerializer(serializers.Serializer):

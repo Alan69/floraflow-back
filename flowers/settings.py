@@ -66,15 +66,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
-    'cloudinary', 
-    'cloudinary_storage',
     'channels',
-
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',
-
     'users',
     'stores',
     'orders',
@@ -169,8 +165,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -291,12 +285,6 @@ CELERY_RESULT_BACKEND = 'django-db'
 # Optional: Timezone settings for Celery
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
-
-CLOUDINARY = {
-    'cloud_name': config('CLOUDINARY_CLOUD_NAME'),
-    'api_key': config('CLOUDINARY_API_KEY'),
-    'api_secret': config('CLOUDINARY_API_SECRET'),
-}
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 256 * 1024 * 1024
 FILE_UPLOAD_MAX_MEMORY_SIZE = 256 * 1024 * 1024
