@@ -35,10 +35,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['email', 'current_order', 'tariff']  # Prevent updating email and user type
 
     def get_profile_picture(self, obj):
-        if obj.picture:
+        if obj.profile_picture:
             request = self.context.get('request')
             if request:
-                return request.build_absolute_uri(obj.picture.url)
+                return request.build_absolute_uri(obj.profile_picture.url)
         return None
 
 
