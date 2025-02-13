@@ -98,6 +98,7 @@ class OrderStoreHistorySerializer(serializers.ModelSerializer):
     proposed_price = serializers.SerializerMethodField()
     comment = serializers.SerializerMethodField()
     first_name = serializers.CharField(source='client.first_name', read_only=True)
+    customer_phone = serializers.CharField(source='client.phone', read_only=True)
 
     class Meta:
         model = Order
@@ -119,7 +120,8 @@ class OrderStoreHistorySerializer(serializers.ModelSerializer):
             'rating',
             'proposed_price',
             'comment',
-            'first_name'
+            'first_name',
+            'customer_phone'
         ]
 
     def get_proposed_price(self, obj):
