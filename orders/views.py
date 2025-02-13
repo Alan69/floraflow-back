@@ -39,9 +39,9 @@ class RateStoreView(generics.UpdateAPIView):
     """View to allow clients to rate a store for a completed order."""
     serializer_class = OrderRatingSerializer
     permission_classes = [IsAuthenticated]
+    lookup_field = 'uuid'
 
     def get_queryset(self):
-
         if getattr(self, 'swagger_fake_view', False):
             return Order.objects.none()  # Return an empty queryset
 
