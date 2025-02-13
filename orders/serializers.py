@@ -71,7 +71,7 @@ class OrderHistorySerializer(serializers.ModelSerializer):
     flower = FlowerSerializerText()
     color = ColorSerializerText()
     store_name = serializers.CharField(source='store.store_profile.store_name', read_only=True)
-    store_comment = serializers.CharField(source='store.store_prices.comment', read_only=True)
+    store_comment = serializers.SerializerMethodField()
     store_logo = serializers.ImageField(source='store.store_profile.logo', read_only=True)
     store_instagram_link = serializers.URLField(source='store.store_profile.instagram_link', read_only=True)
     store_whatsapp_number = serializers.CharField(source='store.store_profile.whatsapp_number', read_only=True)
@@ -105,7 +105,11 @@ class OrderHistorySerializer(serializers.ModelSerializer):
             'store_phone_number',
             'store_average_rating'
         ]
-        
+
+    def get_store_comment(self, obj):
+        latest_price = obj.prices.order_by('-created_at').first()
+        return latest_price.comment if latest_price else None
+
 class OrderStoreHistorySerializer(serializers.ModelSerializer):
     flower = FlowerSerializerText()
     color = ColorSerializerText()
