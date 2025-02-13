@@ -26,13 +26,6 @@ class PriceSerializer(serializers.ModelSerializer):
     logo = serializers.ImageField(source='store.store_profile.logo', read_only=True)
     instagram_link = serializers.URLField(source='store.store_profile.instagram_link', read_only=True)
     whatsapp_number = serializers.CharField(source='store.store_profile.whatsapp_number', read_only=True)
-    flower_img = serializers.SerializerMethodField()
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        if instance.flower_img:
-            representation['flower_img'] = instance.flower_img.url
-        return representation
 
     class Meta:
         model = Price
@@ -40,13 +33,6 @@ class PriceSerializer(serializers.ModelSerializer):
                  'created_at', 'updated_at', 'expires_at', 'store_name', 'logo', 
                  'instagram_link', 'whatsapp_number']
         read_only_fields = ['uuid', 'is_accepted', 'expires_at', 'created_at', 'updated_at']
-
-    def get_flower_img(self, obj):
-        if obj.flower_img:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.flower_img.url)
-        return None
 
 class PriceSerializerMe(serializers.ModelSerializer):
     flower_img = serializers.SerializerMethodField()
