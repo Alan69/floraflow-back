@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from orders.models import Order
-from .serializers import StoreOrderSerializer, StoreProfileSerializer, PriceSerializer
+from .serializers import StoreOrderSerializer, StoreProfileSerializer, PriceSerializer, PriceSerializerPost
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.exceptions import PermissionDenied
 from .models import Price
@@ -27,7 +27,7 @@ class StoreOrdersView(generics.ListAPIView):
 # Endpoint to update order price or send offers
 class StoreOrderUpdateView(generics.CreateAPIView):
     """View for store users to propose a price for an order."""
-    serializer_class = PriceSerializer
+    serializer_class = PriceSerializerPost
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
@@ -45,12 +45,9 @@ class StoreOrderUpdateView(generics.CreateAPIView):
         except AttributeError:
             raise ValidationError("У магазина должен быть настроен профиль для предложения цен.")
 
-        # Get the `order_id` from the URL
-        order_id = kwargs.get('order_id')
-
-        # Validate if the order exists
+        # Get and validate the order
         try:
-            order = Order.objects.get(uuid=order_id)
+            order = Order.objects.get(uuid=kwargs.get('order_id'))
             # Associate the store with the order if not already set
             if not order.store:
                 order.store = request.user
@@ -58,24 +55,15 @@ class StoreOrderUpdateView(generics.CreateAPIView):
         except Order.DoesNotExist:
             return Response({"error": "Заказ не найден."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Extract the proposed price from the request data
-        proposed_price = request.data.get('proposed_price')
-        flower_img = request.FILES.get('flower_img')  # Get from FILES instead of data
-        comment = request.data.get('comment')
-
-        if not proposed_price:
-            return Response({"error": "Предложенная цена обязательна."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Create the Price object
-        price = Price.objects.create(
-            order=order,
-            proposed_price=proposed_price,
-            flower_img=flower_img if flower_img else None,  # Handle None case explicitly
-            comment=comment,
-            store=request.user
+        # Create serializer with order context
+        serializer = self.get_serializer(
+            data=request.data,
+            context={'request': request, 'order': order}
         )
+        serializer.is_valid(raise_exception=True)
+        price = serializer.save()
 
-        # Return a success response
+        # Return the created price using the display serializer
         return Response(
             {
                 "detail": "Цена успешно предложена.",

@@ -66,3 +66,23 @@ class PriceSerializerMe(serializers.ModelSerializer):
         if hasattr(obj.store, 'store_profile'):
             return obj.store.store_profile.instagram_link
         return None
+
+class PriceSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = Price
+        fields = ['proposed_price', 'flower_img', 'comment']
+
+    def validate_proposed_price(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("Предложенная цена должна быть больше нуля.")
+        return value
+
+    def create(self, validated_data):
+        order = self.context['order']
+        store = self.context['request'].user
+        
+        return Price.objects.create(
+            order=order,
+            store=store,
+            **validated_data
+        )
