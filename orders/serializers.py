@@ -70,6 +70,13 @@ class OrderSerializerDetailMe(serializers.ModelSerializer):
 class OrderHistorySerializer(serializers.ModelSerializer):
     flower = FlowerSerializerText()
     color = ColorSerializerText()
+    store_name = serializers.CharField(source='store.store_profile.store_name', read_only=True)
+    store_comment = serializers.CharField(source='store.store_prices.comment', read_only=True)
+    store_logo = serializers.ImageField(source='store.store_profile.logo', read_only=True)
+    store_instagram_link = serializers.URLField(source='store.store_profile.instagram_link', read_only=True)
+    store_whatsapp_number = serializers.CharField(source='store.store_profile.whatsapp_number', read_only=True)
+    store_phone_number = serializers.CharField(source='store.phone', read_only=True)
+    store_average_rating = serializers.FloatField(source='store.store_profile.average_rating', read_only=True)
 
     class Meta:
         model = Order
@@ -89,7 +96,14 @@ class OrderHistorySerializer(serializers.ModelSerializer):
             'reason',
             'created_at', 
             'updated_at',
-            'rating'
+            'rating',
+            'store_name',
+            'store_comment',
+            'store_logo',
+            'store_instagram_link',
+            'store_whatsapp_number',
+            'store_phone_number',
+            'store_average_rating'
         ]
         
 class OrderStoreHistorySerializer(serializers.ModelSerializer):
