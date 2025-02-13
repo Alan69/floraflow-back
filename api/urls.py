@@ -29,7 +29,8 @@ from stores.views import (
     StoreOrderStatusView,
     StoreOrdersView, 
     StoreOrderUpdateView, 
-    StoreProfileUpdateView
+    StoreProfileUpdateView,
+    ClientOrderStatusView
 )
 
 from payments.views import (
@@ -69,7 +70,7 @@ urlpatterns = [
     path('client/order/<uuid:uuid>/rate/', RateStoreView.as_view(), name='rate-store'),
     path('client/<uuid:order_uuid>/cancel/', CancelOrderView.as_view(), name='cancel-order'),
     path('client/order/<uuid:uuid>/', OrderDetailView.as_view(), name='order_by_id'),
-
+    path('client/order-status/<uuid:order_id>/', ClientOrderStatusView.as_view(), name='client_order_status'),
     # order data
     path('flowers/', FlowerListView.as_view(), name='flower-list'),
     path('flowers/<uuid:uuid>/', FlowerDetailView.as_view(), name='flower-detail'),

@@ -245,3 +245,111 @@ class StoreOrderStatusView(APIView):
                 {'error': 'Order not found'}, 
                 status=status.HTTP_404_NOT_FOUND
             )
+
+class ClientOrderStatusView(APIView):
+    """
+    API endpoint that allows stores to update the status of their orders.
+    """
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(
+        operation_description="Update the status of a specific order",
+        manual_parameters=[
+            openapi.Parameter(
+                'order_id',
+                openapi.IN_PATH,
+                description="ID of the order to update",
+                type=openapi.TYPE_INTEGER,
+                required=True
+            ),
+        ],
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['status'],
+            properties={
+                'status': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    enum=['accepted', 'in_transit', 'completed'],
+                    description="New status for the order"
+                ),
+            }
+        ),
+        responses={
+            200: openapi.Response(
+                description="Order status updated successfully",
+                examples={
+                    "application/json": {
+                        "message": "Order status updated successfully",
+                        "status": "accepted"
+                    }
+                }
+            ),
+            400: "Invalid status or missing status",
+            403: "Permission denied",
+            404: "Order not found"
+        }
+    )
+    def patch(self, request, order_id):
+        """
+        Update the status of a specific order.
+
+        Parameters:
+            - order_id (int): The ID of the order to update
+            - status (str): The new status for the order. Must be one of:
+                * accepted (Заказ принят)
+                * in_transit (В пути)
+                * completed (Доставлен)
+
+        Returns:
+            - 200: Order status updated successfully
+            - 400: Invalid status or missing status
+            - 403: Permission denied
+            - 404: Order not found
+        """
+        try:
+            order = Order.objects.get(uuid=order_id)
+            new_status = request.data.get('status')
+            
+            if not new_status:
+                return Response(
+                    {'error': 'Status is required'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Validate status is one of the allowed values
+            allowed_statuses = ['accepted', 'in_transit', 'completed']
+            if new_status not in allowed_statuses:
+                return Response(
+                    {'error': f'Invalid status. Must be one of: {", ".join(allowed_statuses)}'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Check if the store owns this order
+            if order.client != request.user:
+                return Response(
+                    {'error': 'You do not have permission to update this order'}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
+            order.status = new_status
+            order.save()
+            
+            if new_status == 'in_transit':
+                order.client.current_order = order
+                order.client.save()
+            
+            if new_status == 'completed':
+                order.client.current_order = None
+                order.client.save()
+        
+            
+            return Response({
+                'message': 'Order status updated successfully',
+                'status': new_status
+            })
+            
+        except Order.DoesNotExist:
+            return Response(
+                {'error': 'Order not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
