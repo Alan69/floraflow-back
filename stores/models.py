@@ -38,7 +38,7 @@ class Price(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='prices')
     store = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='store_prices')
     proposed_price = models.DecimalField(max_digits=10, decimal_places=2)
-    flower_img = models.ImageField(upload_to=flower_image_path, blank=True, null=True)
+    flower_img = models.ImageField(upload_to='price_logos/', blank=True, null=True)
     comment = models.TextField(null=True, blank=True)
     is_accepted = models.BooleanField(default=False)  # True if the client accepts this price
     created_at = models.DateTimeField(auto_now_add=True)
