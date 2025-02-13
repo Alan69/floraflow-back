@@ -45,7 +45,7 @@ class RateStoreView(generics.UpdateAPIView):
         if getattr(self, 'swagger_fake_view', False):
             return Order.objects.none()  # Return an empty queryset
 
-        return Order.objects.filter(client=self.request.user, status='completed')
+        return Order.objects.filter(client=self.request.user)
 
     def update(self, request, *args, **kwargs):
         order = self.get_object()
