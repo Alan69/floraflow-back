@@ -49,6 +49,24 @@ services:
     env_file:
       - .env
 
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_beat
+    command: celery -A flowers beat --loglevel=info
+    depends_on:
+      - web
+      - redis
+      - celery
+    environment:
+      - DJANGO_SETTINGS_MODULE=flowers.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
   redis:
     image: redis:6
     container_name: redis
