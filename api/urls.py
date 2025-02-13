@@ -66,7 +66,7 @@ urlpatterns = [
     # clien orders
     path('client/order/', OrderCreateView.as_view(), name='order_create'),
     path('client/order-history/', OrderHistoryView.as_view(), name='order_history'),
-    path('client/order/<uuid:pk>/rate/', RateStoreView.as_view(), name='rate-store'),
+    path('client/order/<uuid:uuid>/rate/', RateStoreView.as_view(), name='rate-store'),
     path('client/<uuid:order_uuid>/cancel/', CancelOrderView.as_view(), name='cancel-order'),
     path('client/order/<uuid:uuid>/', OrderDetailView.as_view(), name='order_by_id'),
 
