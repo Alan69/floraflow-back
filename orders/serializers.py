@@ -161,8 +161,3 @@ class OrderRatingSerializer(serializers.ModelSerializer):
         if value < 1 or value > 5:
             raise serializers.ValidationError("Рейтинг должен быть от 1 до 5.")
         return value
-
-    def update(self, instance, validated_data):
-        if instance.status != 'completed':
-            raise serializers.ValidationError("Оценить магазин можно только по выполненным заказам..")
-        return super().update(instance, validated_data)
