@@ -96,7 +96,6 @@ class OrderHistorySerializer(serializers.ModelSerializer):
             'reason',
             'created_at', 
             'updated_at',
-            'rating',
             'store_name',
             'store_comment',
             'store_logo',
