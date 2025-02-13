@@ -77,6 +77,7 @@ class OrderHistorySerializer(serializers.ModelSerializer):
     store_whatsapp_number = serializers.CharField(source='store.store_profile.whatsapp_number', read_only=True)
     store_phone_number = serializers.CharField(source='store.phone', read_only=True)
     store_average_rating = serializers.FloatField(source='store.store_profile.average_rating', read_only=True)
+    store_twogis = serializers.URLField(source='store.store_profile.twogis', read_only=True)
 
     class Meta:
         model = Order
@@ -102,7 +103,8 @@ class OrderHistorySerializer(serializers.ModelSerializer):
             'store_instagram_link',
             'store_whatsapp_number',
             'store_phone_number',
-            'store_average_rating'
+            'store_average_rating',
+            'store_twogis'
         ]
 
     def get_store_comment(self, obj):
