@@ -80,17 +80,17 @@ class ColorDetailView(generics.RetrieveAPIView):
 class CancelOrderView(APIView):
     @swagger_auto_schema(
         operation_summary="Cancel an Order",
-        operation_description="Allows a user to cancel an order by providing a cancellation reason. The order's status will be updated to 'canceled'.",
+        operation_description="Allows a user to cancel an order by providing an optional cancellation reason. The order's status will be updated to 'canceled'.",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
                 'reason': openapi.Schema(
                     type=openapi.TYPE_STRING,
-                    description="The reason for canceling the order.",
+                    description="The reason for canceling the order (optional).",
                     example="Changed my mind about the purchase"
                 ),
             },
-            required=['reason']
+            required=[]  # Changed from ['reason'] to make it optional
         ),
         responses={
             200: openapi.Schema(
@@ -128,19 +128,14 @@ class CancelOrderView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Get the cancellation reason from the request
-        reason = request.data.get('reason', '').strip()
-        if not reason:
-            return Response(
-                {"detail": "Cancellation reason is required."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        # Get the cancellation reason from the request, default to empty string if null/blank
+        reason = request.data.get('reason', '').strip() if request.data.get('reason') else ''
 
         # Update the order status and add the cancellation reason
         user.current_order = None
         user.save()
         order.status = 'canceled'
-        order.reason = reason  # Save the reason to the new field
+        order.reason = reason
         order.save()
 
         return Response(
