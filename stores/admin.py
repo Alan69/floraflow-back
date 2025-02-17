@@ -15,4 +15,16 @@ class StoreProfileAdmin(admin.ModelAdmin):
         }),
     )
 
-admin.site.register(Price)
+@admin.register(Price)
+class PriceAdmin(admin.ModelAdmin):
+    list_display = ('uuid', 'order', 'store', 'proposed_price', 'is_accepted', 'created_at', 'updated_at', 'expires_at')
+    list_filter = ('is_accepted',)
+    search_fields = ('order__uuid', 'store__user__email')
+    readonly_fields = ('uuid',)
+
+    fieldsets = (
+        (None, {
+            'fields': ('uuid', 'order', 'store', 'proposed_price', 'is_accepted', 'created_at', 'updated_at', 'expires_at')
+        }),
+    )
+
