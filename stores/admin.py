@@ -21,6 +21,8 @@ class PriceAdmin(admin.ModelAdmin):
     list_filter = ('is_accepted',)
     search_fields = ('order__uuid', 'store__user__email')
     readonly_fields = ('uuid',)
+    ordering = ('-created_at',)
+    
 
     fieldsets = (
         (None, {
