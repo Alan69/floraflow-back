@@ -33,24 +33,38 @@ class RegisterView(View):
         return render(request, 'users/register.html')
 
     def post(self, request):
-        phone = request.POST.get('phone')
+        email = request.POST.get('email')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        phone = request.POST.get('phone')
+        city = request.POST.get('city')
         
         if password != password2:
             messages.error(request, 'Пароли не совпадают')
             return render(request, 'users/register.html')
             
         response = requests.post(f'{API_BASE_URL}/register/', json={
+            'email': email,
+            'password': password,
+            'first_name': first_name,
+            'last_name': last_name,
             'phone': phone,
-            'password': password
+            'city': city
         })
         
         if response.status_code == 201:
             messages.success(request, 'Регистрация успешна! Теперь вы можете войти.')
             return redirect('login')
         else:
-            messages.error(request, 'Ошибка при регистрации')
+            # Try to get more specific error message from the API response
+            try:
+                error_data = response.json()
+                error_message = error_data.get('detail', 'Ошибка при регистрации')
+                messages.error(request, error_message)
+            except:
+                messages.error(request, 'Ошибка при регистрации')
             return render(request, 'users/register.html')
 
 class ProfileView(View):

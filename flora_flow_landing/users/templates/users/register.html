@@ -9,16 +9,32 @@
             <form method="post" id="registerForm">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="phone">Номер телефона</label>
-                    <input type="tel" id="phone" name="phone" required class="form-control">
+                    <label for="first_name">Имя</label>
+                    <input type="text" id="first_name" name="first_name" required class="form-control">
                 </div>
                 <div class="form-group">
+                    <label for="last_name">Фамилия</label>
+                    <input type="text" id="last_name" name="last_name" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required class="form-control">
+                </div>
+                <div class="form-group">    
                     <label for="password">Пароль</label>
                     <input type="password" id="password" name="password" required class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="password2">Подтвердите пароль</label>
                     <input type="password" id="password2" name="password2" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="city">Город</label>
+                    <input type="text" id="city" name="city" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Номер телефона</label>
+                    <input type="tel" id="phone" name="phone" required class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
             </form>
