@@ -1562,9 +1562,7 @@ span#progress-value i {
 }
 
 .download-section {
-    padding: 80px 0;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 30px;
+    padding: 60px 0;
     margin: 40px 0;
 }
 
@@ -1592,19 +1590,16 @@ span#progress-value i {
     justify-content: center;
     gap: 40px;
     padding: 30px;
-    background: white;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .app-preview {
-    max-width: 300px;
+    max-width: 200px;
     height: auto;
-    border-radius: 20px;
 }
 
 .download-info {
-    text-align: left;
+    text-align: center;
 }
 
 .download-badge {
@@ -1621,43 +1616,18 @@ span#progress-value i {
     font-weight: 600;
 }
 
-.download-btn {
+.download-info .btn {
+    padding: 20px 40px;
+}
+
+.download-info .btn h3 {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 15px 30px;
-    background: #108A00;
-    border: none;
-    border-radius: 12px;
-    transition: all 0.3s ease;
+    gap: 10px;
 }
 
-.download-btn:hover {
-    background: #0c6b00;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(16, 138, 0, 0.3);
-}
-
-.download-btn i {
+.download-info .btn i {
     font-size: 24px;
-    color: white;
-}
-
-.btn-text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    color: white;
-}
-
-.btn-text small {
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-.btn-text span {
-    font-size: 18px;
-    font-weight: 600;
 }
 
 @media (max-width: 768px) {
@@ -1671,6 +1641,6 @@ span#progress-value i {
     }
     
     .app-preview {
-        max-width: 200px;
+        max-width: 150px;
     }
 }
