@@ -30,6 +30,8 @@ services:
       - "8001:8001"
     environment:
       - DJANGO_SETTINGS_MODULE=flora_flow.settings
+    depends_on:
+      - db
 
 
   celery:

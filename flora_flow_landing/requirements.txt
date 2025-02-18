@@ -24,3 +24,5 @@ whitenoise==6.8.2
 requests
 Telethon==1.37.0
 python-telegram-bot==21.7
+psycopg2-binary==2.9.10
+python-decouple

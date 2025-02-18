@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<section class="profile-section gap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="profile-sidebar">
+                    <div class="profile-image">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="rounded-circle">
+                        {% else %}
+                            <img src="{% static 'img/default-avatar.png' %}" alt="Default Profile" class="rounded-circle">
+                        {% endif %}
+                    </div>
+                    <div class="profile-info mt-4">
+                        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                        <p class="text-muted">{{ user.email }}</p>
+                        <p><i class="fas fa-phone"></i> {{ user.phone }}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> {{ user.city }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="profile-content">
+                    <div class="profile-header">
+                        <h2>Профиль</h2>
+                    </div>
+                    <form method="POST" enctype="multipart/form-data" class="get-a-quote mt-4">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Имя</p>
+                                <input type="text" name="first_name" value="{{ user.first_name }}" placeholder="Имя">
+                            </div>
+                            <div class="col-md-6">
+                                <p>Фамилия</p>
+                                <input type="text" name="last_name" value="{{ user.last_name }}" placeholder="Фамилия">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <p>Телефон</p>
+                                <input type="tel" name="phone" value="{{ user.phone }}" placeholder="Телефон">
+                            </div>
+                            <div class="col-md-6">
+                                <p>Город</p>
+                                <select name="city" class="form-select">
+                                    <option value="Astana" {% if user.city == 'Astana' %}selected{% endif %}>Астана</option>
+                                    <option value="Almaty" {% if user.city == 'Almaty' %}selected{% endif %}>Алматы</option>
+                                    <option value="Shymkent" {% if user.city == 'Shymkent' %}selected{% endif %}>Шымкент</option>
+                                    <option value="Other" {% if user.city == 'Other' %}selected{% endif %}>Другой</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <p>Фото профиля</p>
+                                <input type="file" name="profile_picture" class="form-control" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn">Сохранить изменения</button>
+                        </div>
+                    </form>
+
+                    <div class="change-password mt-5">
+                        <h3>Изменить пароль</h3>
+                        <form method="POST" action="{% url 'change_password' %}" class="get-a-quote mt-4">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>Текущий пароль</p>
+                                    <input type="password" name="old_password" placeholder="Текущий пароль">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <p>Новый пароль</p>
+                                    <input type="password" name="new_password" placeholder="Новый пароль">
+                                </div>
+                                <div class="col-md-6">
+                                    <p>Подтвердите новый пароль</p>
+                                    <input type="password" name="new_password2" placeholder="Подтвердите новый пароль">
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <button type="submit" class="btn">Изменить пароль</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 
