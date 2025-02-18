@@ -8,11 +8,7 @@
             <div class="col-lg-4">
                 <div class="profile-sidebar">
                     <div class="profile-image-container">
-                        {% if user.profile_picture %}
-                            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-image">
-                        {% else %}
-                            <img src="{% static 'img/default-avatar.png' %}" alt="Default Profile" class="profile-image">
-                        {% endif %}
+                        <img src="{{ user.profile_picture }}" alt="Profile Picture" class="profile-image">
                     </div>
                     <div class="profile-info">
                         <h3 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h3>
