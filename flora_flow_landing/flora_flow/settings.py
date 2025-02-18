@@ -70,6 +70,7 @@ INSTALLED_APPS = [
 
     'main',
     'users',
+    'payments',
 ]
 
 MIDDLEWARE = [
