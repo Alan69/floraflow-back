@@ -1838,3 +1838,52 @@ span#progress-value i {
 .form-floating > label {
     padding: 15px;
 }
+
+/* Tariff Info Styles */
+.tariff-info .card {
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.current-tariff {
+    text-align: center;
+    padding: 10px;
+}
+
+.current-tariff h5 {
+    color: #108A00;
+    margin-bottom: 10px;
+}
+
+.current-tariff .price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #108A00;
+    margin: 15px 0;
+}
+
+.current-tariff .days-left {
+    color: #666;
+    font-size: 14px;
+}
+
+.no-tariff {
+    text-align: center;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* Payment History Styles */
+.payment-history .card {
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.payment-history .table {
+    font-size: 14px;
+}
+
+.payment-history .badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+} 

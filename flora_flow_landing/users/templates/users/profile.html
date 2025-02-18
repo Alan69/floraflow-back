@@ -2,24 +2,50 @@
 {% load static %}
 
 {% block main %}
-<section class="profile-section gap">
+<section class="profile-section">
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
                 <div class="profile-sidebar">
-                    <div class="profile-image-container">
-                        <img src="{{ user.profile_picture }}" alt="Profile Picture" class="profile-image">
+                    <div class="profile-image">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture }}" alt="Profile Picture" class="img-fluid rounded-circle">
+                        {% else %}
+                            <img src="{% static 'img/default-avatar.png' %}" alt="Default Profile" class="img-fluid rounded-circle">
+                        {% endif %}
                     </div>
                     <div class="profile-info">
-                        <h3 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h3>
-                        <div class="profile-details">
-                            <p class="profile-email"><i class="fas fa-envelope"></i> {{ user.email }}</p>
-                            <p class="profile-phone"><i class="fas fa-phone"></i> {{ user.phone }}</p>
-                            <p class="profile-location"><i class="fas fa-map-marker-alt"></i> {{ user.city }}</p>
+                        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                        <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+                        <p><i class="fas fa-phone"></i> {{ user.phone }}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> {{ user.city }}</p>
+                    </div>
+                </div>
+                
+                <!-- Tariff Information Section -->
+                <div class="tariff-info mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Текущий тариф</h4>
+                            {% if user.tariff %}
+                                <div class="current-tariff">
+                                    <h5>{{ user.tariff.name }}</h5>
+                                    <p class="text-muted">{{ user.tariff.info }}</p>
+                                    <p class="price">{{ user.tariff.price }} ₸</p>
+                                    {% if user.tariff_days > 0 %}
+                                        <p class="days-left">Осталось дней: {{ user.tariff_days }}</p>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <p class="no-tariff">У вас нет активного тарифа</p>
+                                <a href="{% url 'payments:tariffs' %}" class="btn btn-primary">Выбрать тариф</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Keep existing profile form section -->
             <div class="col-lg-8">
                 <div class="profile-content">
                     <div class="profile-header">
@@ -72,6 +98,50 @@
                         </div>
                     </form>
                 </div>
+
+                {% if user.tariff %}
+                <!-- Payment History Section -->
+                <div class="payment-history mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">История платежей</h4>
+                            <div class="text-end mb-3">
+                                <a href="{% url 'payments:tariffs' %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-sync-alt me-2"></i>Продлить тариф
+                                </a>
+                            </div>
+                            {% if payment_history %}
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Дата</th>
+                                                <th>Тариф</th>
+                                                <th>Сумма</th>
+                                                <th>Статус</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for payment in payment_history %}
+                                            <tr>
+                                                <td>{{ payment.date }}</td>
+                                                <td>{{ payment.tariff_name }}</td>
+                                                <td>{{ payment.amount }} ₸</td>
+                                                <td>
+                                                    <span class="badge bg-success">{{ payment.status }}</span>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <p class="text-muted">История платежей пуста</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

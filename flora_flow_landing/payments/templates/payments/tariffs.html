@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<section class="tariffs-section">
+    <div class="container">
+        <h2 class="text-center mb-5">Тарифные планы</h2>
+        <div class="row">
+            {% for tariff in tariffs %}
+            <div class="col-md-4 mb-4">
+                <div class="card tariff-card">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ tariff.name }}</h3>
+                        <p class="price">{{ tariff.price }} ₸</p>
+                        <div class="info">{{ tariff.info|linebreaks }}</div>
+                        <form method="post" action="{% url 'payments:initiate' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="tariff_uuid" value="{{ tariff.uuid }}">
+                            <button type="submit" class="btn btn-primary w-100">Выбрать</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %} 

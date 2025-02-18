@@ -78,7 +78,23 @@ class ProfileView(View):
         
         if response.status_code == 200:
             user_data = response.json()
-            return render(request, 'users/profile.html', {'user': user_data})
+            
+            # Get payment history if available
+            payment_history_response = requests.get(
+                f'{API_BASE_URL}/payment/history/',
+                headers=headers
+            )
+            
+            payment_history = []
+            if payment_history_response.status_code == 200:
+                payment_history = payment_history_response.json()
+                
+            context = {
+                'user': user_data,
+                'payment_history': payment_history
+            }
+            
+            return render(request, 'users/profile.html', context)
         else:
             messages.error(request, 'Ошибка при получении данных профиля')
             return redirect('login')
