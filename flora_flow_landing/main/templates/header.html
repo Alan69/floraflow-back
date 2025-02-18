@@ -9,7 +9,7 @@
             <h5>Flora Flow</h5>
         </div>
         <div class="login">
-            {% if user.is_authenticated %}
+            {% if request.session.access_token %}
                 <a href="{% url 'profile' %}">Профиль</a>
                 <a href="{% url 'logout' %}">Выйти</a>
             {% else %}

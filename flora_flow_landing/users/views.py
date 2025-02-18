@@ -111,4 +111,11 @@ class ProfileView(View):
         else:
             messages.error(request, 'Ошибка при обновлении профиля')
             
-        return redirect('profile') 
+        return redirect('profile')
+
+class LogoutView(View):
+    def get(self, request):
+        # Clear the session
+        request.session.pop('access_token', None)
+        request.session.pop('refresh_token', None)
+        return redirect('index') 
