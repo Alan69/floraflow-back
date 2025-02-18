@@ -35,6 +35,7 @@
         23. video-fram
         24. progress go to top
         25. preloader
+        26. download-section
 
 -----------------------------------------------------------------------------------*/
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap');
@@ -1558,4 +1559,118 @@ span#progress-value i {
 
 .btn i {
     margin-right: 8px;
+}
+
+.download-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 30px;
+    margin: 40px 0;
+}
+
+.download-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.download-content h2 {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #108A00;
+}
+
+.download-description {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.download-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.app-preview {
+    max-width: 300px;
+    height: auto;
+    border-radius: 20px;
+}
+
+.download-info {
+    text-align: left;
+}
+
+.download-badge {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.badge-text {
+    background: #108A00;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 30px;
+    background: #108A00;
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+    background: #0c6b00;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(16, 138, 0, 0.3);
+}
+
+.download-btn i {
+    font-size: 24px;
+    color: white;
+}
+
+.btn-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: white;
+}
+
+.btn-text small {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.btn-text span {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .download-box {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .download-info {
+        text-align: center;
+    }
+    
+    .app-preview {
+        max-width: 200px;
+    }
 }

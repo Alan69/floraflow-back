@@ -102,14 +102,27 @@
   });
 </script>
 
-<div class="container text-center mt-5">
-  <h3>Скачать приложение</h3>
-  <p>Доступна бета-версия приложения Flora Flow</p>
-  <a href="{% static 'apk/app-release-unsigned.apk' %}" download class="btn">
-    <span>
-      <i class="fas fa-download"></i> 
-      Скачать APK
-    </span>
-  </a>
-</div>
+<section class="download-section">
+  <div class="container">
+    <div class="download-content text-center">
+      <h2>Скачать приложение</h2>
+      <p class="download-description">Доступна бета-версия приложения Flora Flow</p>
+      <div class="download-box">
+        <img src="{% static 'img/phone-mockup.png' %}" alt="Flora Flow App" class="app-preview">
+        <div class="download-info">
+          <div class="download-badge">
+            <span class="badge-text">BETA</span>
+          </div>
+          <a href="{% static 'apk/app-release-unsigned.apk' %}" download class="btn download-btn">
+            <i class="fas fa-download"></i>
+            <div class="btn-text">
+              <small>Доступно для Android</small>
+              <span>Скачать APK</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}
