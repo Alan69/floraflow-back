@@ -1548,3 +1548,14 @@ span#progress-value i {
 .consulting-business-text,.consulting-business-text:before {
     transition: 0.3s ease-in-out;
 }
+.text-center {
+    text-align: center;
+}
+
+.mt-5 {
+    margin-top: 3rem;
+}
+
+.btn i {
+    margin-right: 8px;
+}
