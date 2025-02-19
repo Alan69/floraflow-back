@@ -2,8 +2,9 @@ import requests
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
+from django.conf import settings
 
-API_BASE_URL = 'https://api.floraflow.tech/api'
+API_BASE_URL = settings.BASE_URL + '/api'
 
 class LoginView(View):
     def get(self, request):

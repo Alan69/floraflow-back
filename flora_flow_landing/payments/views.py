@@ -4,7 +4,7 @@ from django.contrib import messages
 import requests
 from django.conf import settings
 
-API_BASE_URL = 'https://api.floraflow.tech/api'
+API_BASE_URL = settings.BASE_URL + '/api'
 
 class TariffsView(View):
     def get(self, request):
