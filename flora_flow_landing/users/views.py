@@ -114,6 +114,7 @@ class ProfileView(View):
             'last_name': request.POST.get('last_name'),
             'phone': request.POST.get('phone'),
             'city': request.POST.get('city'),
+            'user_type': request.POST.get('user_type'),
         }
         
         response = requests.patch(
@@ -135,4 +136,62 @@ class LogoutView(View):
         # Clear the session
         request.session.pop('access_token', None)
         request.session.pop('refresh_token', None)
-        return redirect('index') 
+        return redirect('index')
+
+class StoreProfileView(View):
+    def get(self, request):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        response = requests.get(f'{API_BASE_URL}/store/profile/', headers=headers)
+        
+        if response.status_code == 200:
+            store_data = response.json()
+            context = {
+                'store': store_data
+            }
+            return render(request, 'users/store_profile.html', context)
+        else:
+            messages.error(request, 'Ошибка при получении данных магазина')
+            return redirect('profile')
+
+    def post(self, request):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        
+        # Prepare the files dictionary if there's a logo upload
+        files = {}
+        if request.FILES.get('logo'):
+            files['logo'] = request.FILES['logo']
+        
+        # Prepare the data dictionary
+        data = {
+            'store_name': request.POST.get('store_name'),
+            'address': request.POST.get('address'),
+            'instagram_link': request.POST.get('instagram_link'),
+            'twogis': request.POST.get('twogis'),
+            'whatsapp_number': request.POST.get('whatsapp_number'),
+        }
+        
+        # Make the API request
+        response = requests.patch(
+            f'{API_BASE_URL}/store/profile/',
+            headers=headers,
+            data=data,
+            files=files
+        )
+        
+        if response.status_code == 200:
+            messages.success(request, 'Профиль магазина успешно обновлен')
+        else:
+            try:
+                error_data = response.json()
+                error_message = error_data.get('detail', 'Ошибка при обновлении профиля магазина')
+                messages.error(request, error_message)
+            except:
+                messages.error(request, 'Ошибка при обновлении профиля магазина')
+        
+        return redirect('store_profile') 

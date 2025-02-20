@@ -92,6 +92,11 @@
                             </div>
                         </div>
                         <div class="mt-4 text-end">
+                            {% if user.user_type == 'store' %}
+                                <a href="{% url 'store_profile_update' %}" class="btn btn-outline-primary me-2">
+                                    <i class="fas fa-store me-2"></i>Профиль магазина
+                                </a>
+                            {% endif %}
                             <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="fas fa-save me-2"></i>Сохранить изменения
                             </button>
