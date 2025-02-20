@@ -269,4 +269,22 @@ class CancelOrderView(View):
         else:
             messages.error(request, 'Ошибка при отмене заказа')
             
-        return redirect('profile') 
+        return redirect('profile')
+
+class OrderHistoryView(View):
+    def get(self, request):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        response = requests.get(f'{API_BASE_URL}/client/order-history/', headers=headers)
+        
+        if response.status_code == 200:
+            orders = response.json()
+            context = {
+                'orders': orders
+            }
+            return render(request, 'orders/order_history.html', context)
+        else:
+            messages.error(request, 'Ошибка при получении истории заказов')
+            return redirect('profile') 
