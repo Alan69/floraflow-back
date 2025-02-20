@@ -13,6 +13,8 @@
         <div class="login">
             {% if request.session.access_token %}
                 <a href="{% url 'profile' %}">Профиль</a>
+                <a href="{% url 'create_order' %}">Создать заказ</a>
+                <a href="{% url 'order_history' %}">История заказов</a>
                 <a href="{% url 'logout' %}">Выйти</a>
             {% else %}
                 <a href="{% url 'login' %}">Войти</a>
