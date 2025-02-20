@@ -292,3 +292,17 @@ class OrderHistoryView(View):
         else:
             messages.error(request, 'Ошибка при получении истории заказов')
             return redirect('profile') 
+        
+class RateStoreView(View):
+    def post(self, request, order_uuid):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        response = requests.post(
+            f'{API_BASE_URL}/client/order/{order_uuid}/rate/',
+            headers=headers,
+            json={'rating': request.POST.get('rating')}
+        )
+        
+        return redirect('order_history')    
