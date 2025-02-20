@@ -126,6 +126,9 @@ class ProfileView(View):
         
         if response.status_code == 200:
             messages.success(request, 'Профиль успешно обновлен')
+            # If user type changed to store, redirect to store profile
+            if data['user_type'] == 'store':
+                return redirect('store_profile_update')
         else:
             messages.error(request, 'Ошибка при обновлении профиля')
             

@@ -84,6 +84,15 @@
                                     <label for="floatingCity">Город</label>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select name="user_type" class="form-select" id="floatingUserType">
+                                        <option value="client" {% if user.user_type == 'client' %}selected{% endif %}>Клиент</option>
+                                        <option value="store" {% if user.user_type == 'store' %}selected{% endif %}>Магазин</option>
+                                    </select>
+                                    <label for="floatingUserType">Тип пользователя</label>
+                                </div>
+                            </div>
                             <div class="col-12">
                                 <div class="profile-picture-upload">
                                     <label for="profile_picture" class="form-label">Фото профиля</label>
@@ -147,6 +156,45 @@
                                 </div>
                             {% else %}
                                 <p class="text-muted">История платежей пуста</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if user.user_type == 'store' and user.store_profile %}
+                <div class="store-info mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Информация о магазине</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Название магазина:</strong> {{ user.store_profile.store_name }}</p>
+                                    <p><strong>Адрес:</strong> {{ user.store_profile.address }}</p>
+                                    <p><strong>WhatsApp:</strong> {{ user.store_profile.whatsapp_number }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Instagram:</strong> 
+                                        {% if user.store_profile.instagram_link %}
+                                            <a href="{{ user.store_profile.instagram_link }}" target="_blank">Перейти</a>
+                                        {% else %}
+                                            Не указан
+                                        {% endif %}
+                                    </p>
+                                    <p><strong>2GIS:</strong>
+                                        {% if user.store_profile.twogis %}
+                                            <a href="{{ user.store_profile.twogis }}" target="_blank">Перейти</a>
+                                        {% else %}
+                                            Не указан
+                                        {% endif %}
+                                    </p>
+                                    <p><strong>Рейтинг:</strong> {{ user.store_profile.average_rating|default:"Нет оценок" }}</p>
+                                </div>
+                            </div>
+                            {% if user.store_profile.logo %}
+                                <div class="store-logo mt-3">
+                                    <img src="{{ user.store_profile.logo }}" alt="Store Logo" class="img-thumbnail" style="max-height: 100px;">
+                                </div>
                             {% endif %}
                         </div>
                     </div>
