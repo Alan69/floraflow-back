@@ -197,4 +197,58 @@ class StoreProfileView(View):
             except:
                 messages.error(request, 'Ошибка при обновлении профиля магазина')
         
-        return redirect('store_profile') 
+        return redirect('store_profile')
+
+class CreateOrderView(View):
+    def get(self, request):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        
+        # Get flowers list
+        flowers_response = requests.get(f'{API_BASE_URL}/flowers/', headers=headers)
+        colors_response = requests.get(f'{API_BASE_URL}/colors/', headers=headers)
+        
+        context = {
+            'flowers': flowers_response.json() if flowers_response.status_code == 200 else [],
+            'colors': colors_response.json() if colors_response.status_code == 200 else []
+        }
+        
+        return render(request, 'orders/create_order.html', context)
+
+    def post(self, request):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        
+        data = {
+            'flower': request.POST.get('flower'),
+            'color': request.POST.get('color'),
+            'flower_height': request.POST.get('flower_height'),
+            'quantity': request.POST.get('quantity'),
+            'decoration': request.POST.get('decoration') == 'on',
+            'recipients_address': request.POST.get('recipients_address'),
+            'recipients_phone': request.POST.get('recipients_phone'),
+            'flower_data': request.POST.get('flower_data'),
+        }
+        
+        response = requests.post(
+            f'{API_BASE_URL}/client/order/',
+            headers=headers,
+            json=data
+        )
+        
+        if response.status_code == 201:
+            messages.success(request, 'Заказ успешно создан')
+            return redirect('profile')
+        else:
+            try:
+                error_data = response.json()
+                error_message = error_data.get('detail', 'Ошибка при создании заказа')
+                messages.error(request, error_message)
+            except:
+                messages.error(request, 'Ошибка при создании заказа')
+            
+            return redirect('create_order') 

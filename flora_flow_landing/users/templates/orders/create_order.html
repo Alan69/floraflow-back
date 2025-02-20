@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<section class="create-order-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="order-content">
+                    <div class="order-header">
+                        <h2>Создать заказ</h2>
+                        <p class="text-muted">Заполните информацию о заказе</p>
+                    </div>
+                    <form method="POST" class="order-form">
+                        {% csrf_token %}
+                        <div class="row g-4">
+                            <!-- Flower Selection -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select name="flower" class="form-select" id="floatingFlower" required>
+                                        <option value="" selected disabled>Выберите цветок</option>
+                                        {% for flower in flowers %}
+                                            <option value="{{ flower.uuid }}">{{ flower.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="floatingFlower">Цветок</label>
+                                </div>
+                            </div>
+
+                            <!-- Color Selection -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select name="color" class="form-select" id="floatingColor" required>
+                                        <option value="" selected disabled>Выберите цвет</option>
+                                        {% for color in colors %}
+                                            <option value="{{ color.uuid }}">{{ color.text }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="floatingColor">Цвет</label>
+                                </div>
+                            </div>
+
+                            <!-- Flower Height -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select name="flower_height" class="form-select" id="floatingHeight" required>
+                                        <option value="" selected disabled>Выберите высоту</option>
+                                        <option value="50cm">50 см</option>
+                                        <option value="60cm">60 см</option>
+                                        <option value="70cm">70 см</option>
+                                        <option value="80cm">80 см</option>
+                                        <option value="90cm">90 см</option>
+                                        <option value="100cm">100 см</option>
+                                    </select>
+                                    <label for="floatingHeight">Высота цветка</label>
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="number" name="quantity" class="form-control" id="floatingQuantity" min="1" required>
+                                    <label for="floatingQuantity">Количество</label>
+                                </div>
+                            </div>
+
+                            <!-- Decoration -->
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input type="checkbox" name="decoration" class="form-check-input" id="decoration">
+                                    <label class="form-check-label" for="decoration">Нужна декорация</label>
+                                </div>
+                            </div>
+
+                            <!-- Recipient's Address -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea name="recipients_address" class="form-control" id="floatingAddress" style="height: 100px" required></textarea>
+                                    <label for="floatingAddress">Адрес доставки</label>
+                                </div>
+                            </div>
+
+                            <!-- Recipient's Phone -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="tel" name="recipients_phone" class="form-control" id="floatingPhone" required>
+                                    <label for="floatingPhone">Телефон получателя</label>
+                                </div>
+                            </div>
+
+                            <!-- Additional Information -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea name="flower_data" class="form-control" id="floatingInfo" style="height: 100px" placeholder="Дополнительная информация"></textarea>
+                                    <label for="floatingInfo">Дополнительная информация</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-arrow-left me-2"></i>Назад
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Создать заказ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 
