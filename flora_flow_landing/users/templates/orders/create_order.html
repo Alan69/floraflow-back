@@ -20,7 +20,7 @@
                                     <select name="flower" class="form-select" id="floatingFlower" required>
                                         <option value="" selected disabled>Выберите цветок</option>
                                         {% for flower in flowers %}
-                                            <option value="{{ flower.uuid }}">{{ flower.name }}</option>
+                                            <option value="{{ flower.uuid }}">{{ flower.text }}</option>
                                         {% endfor %}
                                     </select>
                                     <label for="floatingFlower">Цветок</label>
