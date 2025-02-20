@@ -111,7 +111,7 @@
     </div>
 </section>
 
-{% for order in orders %}
+{% comment %} {% for order in orders %}
 {% if order.status == 'completed' and not order.rating %}
 <!-- Rating Modal -->
 <div class="modal fade" id="rateModal{{ order.uuid }}" tabindex="-1" aria-hidden="true">
@@ -143,7 +143,7 @@
     </div>
 </div>
 {% endif %}
-{% endfor %}
+{% endfor %} {% endcomment %}
 {% endblock %}
 
 {% block extra_css %}
