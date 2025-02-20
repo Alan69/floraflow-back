@@ -251,4 +251,22 @@ class CreateOrderView(View):
             except:
                 messages.error(request, 'Ошибка при создании заказа')
             
-            return redirect('create_order') 
+            return redirect('create_order')
+
+class CancelOrderView(View):
+    def post(self, request, order_uuid):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        response = requests.post(
+            f'{API_BASE_URL}/client/order/{order_uuid}/cancel/',
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            messages.success(request, 'Заказ успешно отменен')
+        else:
+            messages.error(request, 'Ошибка при отмене заказа')
+            
+        return redirect('profile') 
