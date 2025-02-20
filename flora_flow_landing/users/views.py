@@ -107,7 +107,11 @@ class ProfileView(View):
         headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
         files = {}
         if request.FILES.get('profile_picture'):
-            files['profile_picture'] = request.FILES['profile_picture']
+            profile_pic = request.FILES['profile_picture']
+            if profile_pic.size > 256 * 1024 * 1024:  # 256MB in bytes
+                messages.error(request, 'Файл слишком большой. Максимальный размер: 256MB')
+                return redirect('profile')
+            files['profile_picture'] = profile_pic
             
         data = {
             'first_name': request.POST.get('first_name'),
