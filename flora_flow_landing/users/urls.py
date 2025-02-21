@@ -13,4 +13,5 @@ urlpatterns = [
     path('rate-store/<uuid:uuid>/', views.RateStoreView.as_view(), name='rate-store'),
     path('store-orders/', views.StoreOrdersView.as_view(), name='store_orders'),
     path('store-order-history/', views.StoreOrderHistoryView.as_view(), name='store_order_history'),
+    path('propose-price/<uuid:order_id>/', views.ProposePriceView.as_view(), name='propose-price'),
 ] 

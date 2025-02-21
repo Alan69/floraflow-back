@@ -347,3 +347,32 @@ class StoreOrdersView(View):
         else:
             messages.error(request, 'Ошибка при получении заказов')
             return redirect('profile')
+
+class ProposePriceView(View):
+    def post(self, request, order_id):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        data = {
+            'proposed_price': request.POST.get('proposed_price'),
+            'comment': request.POST.get('comment')
+        }
+        
+        response = requests.post(
+            f'{API_BASE_URL}/store/propose-price/{order_id}/',
+            headers=headers,
+            json=data
+        )
+        
+        if response.status_code == 201:
+            messages.success(request, 'Цена успешно предложена')
+        else:
+            try:
+                error_data = response.json()
+                error_message = error_data.get('detail', 'Ошибка при предложении цены')
+                messages.error(request, error_message)
+            except:
+                messages.error(request, 'Ошибка при предложении цены')
+        
+        return redirect('store_orders')
