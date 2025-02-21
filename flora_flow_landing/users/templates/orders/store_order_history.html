@@ -37,7 +37,11 @@
                                                      {% elif order.status == 'in_transit' %}bg-primary
                                                      {% elif order.status == 'completed' %}bg-success
                                                      {% else %}bg-danger{% endif %}">
-                                                {{ order.get_status_display }}
+                                                {% if order.status == 'pending' %}Ожидает
+                                                {% elif order.status == 'accepted' %}Принят
+                                                {% elif order.status == 'in_transit' %}В пути
+                                                {% elif order.status == 'completed' %}Выполнен
+                                                {% else %}Отменён{% endif %}
                                             </span>
                                         </p>
                                         {% if order.proposed_price %}

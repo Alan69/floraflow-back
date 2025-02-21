@@ -223,7 +223,11 @@
                                                          {% elif user.current_order.status == 'in_transit' %}bg-primary
                                                          {% elif user.current_order.status == 'completed' %}bg-success
                                                          {% else %}bg-danger{% endif %}">
-                                            {{ user.current_order.get_status_display }}
+                                            {% if user.current_order.status == 'pending' %}Ожидает
+                                            {% elif user.current_order.status == 'accepted' %}Принят
+                                            {% elif user.current_order.status == 'in_transit' %}В пути
+                                            {% elif user.current_order.status == 'completed' %}Выполнен
+                                            {% else %}Отменён{% endif %}
                                         </span>
                                     </p>
                                 </div>
