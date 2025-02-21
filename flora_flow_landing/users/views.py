@@ -24,6 +24,13 @@ class LoginView(View):
             # Store tokens in session
             request.session['access_token'] = data['access']
             request.session['refresh_token'] = data['refresh']
+            
+            # Get user data and store it in session
+            headers = {'Authorization': f'Bearer {data["access"]}'}
+            user_response = requests.get(f'{API_BASE_URL}/me/', headers=headers)
+            if user_response.status_code == 200:
+                request.session['user_data'] = user_response.json()
+            
             return redirect('profile')
         else:
             messages.error(request, 'Неверный логин или пароль')
