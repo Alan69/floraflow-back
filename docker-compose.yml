@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: web
-    command: gunicorn flowers.wsgi:application --bind 0.0.0.0:8000
+    command: daphne -b 0.0.0.0 -p 8000 flowers.asgi:application
     volumes:
       - .:/app
       - media_volume:/app/media
