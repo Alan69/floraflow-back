@@ -23,9 +23,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Create WebSocket connection
+        // Create WebSocket connection using the appropriate protocol
+        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
         const socket = new WebSocket(
-            'ws://' + window.location.host + '/ws/notifications/'
+            protocol + window.location.host + '/ws/notifications/'
         );
 
         socket.onmessage = function(e) {
