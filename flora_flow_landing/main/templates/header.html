@@ -12,14 +12,15 @@
         </div>
         <div class="login">
             {% if request.session.access_token %}
-                {% if user.user_type == 'client' %}
+                {% with user_data=request.session.user_data %}
+                {% if user_data.user_type == 'client' %}
                     <nav class="nav-links">
                         <a href="{% url 'profile' %}" class="nav-link"><i class="fas fa-user"></i> Профиль</a>
                         <a href="{% url 'create_order' %}" class="nav-link"><i class="fas fa-plus-circle"></i> Создать заказ</a>
                         <a href="{% url 'order_history' %}" class="nav-link"><i class="fas fa-history"></i> История заказов</a>
                         <a href="{% url 'logout' %}" class="nav-link logout"><i class="fas fa-sign-out-alt"></i> Выйти</a>
                     </nav>
-                {% elif user.user_type == 'store' %}
+                {% elif user_data.user_type == 'store' %}
                     <nav class="nav-links">
                         <a href="{% url 'profile' %}" class="nav-link"><i class="fas fa-user"></i> Профиль</a>
                         <a href="{% url 'store_profile_update' %}" class="nav-link"><i class="fas fa-store"></i> Профиль магазина</a>
@@ -28,6 +29,7 @@
                         <a href="{% url 'logout' %}" class="nav-link logout"><i class="fas fa-sign-out-alt"></i> Выйти</a>
                     </nav>
                 {% endif %}
+                {% endwith %}
             {% else %}
                 <nav class="nav-links">
                     <a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Войти</a>

@@ -143,6 +143,7 @@ class LogoutView(View):
         # Clear the session
         request.session.pop('access_token', None)
         request.session.pop('refresh_token', None)
+        request.session.pop('user_data', None)
         return redirect('index')
 
 class StoreProfileView(View):
