@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.exceptions import ValidationError
+from stores.utils import send_order_notification
 
 # Endpoint for creating a new order
 class OrderCreateView(generics.CreateAPIView):
@@ -21,6 +22,8 @@ class OrderCreateView(generics.CreateAPIView):
         order = serializer.save(client=self.request.user)
         self.request.user.current_order = order
         self.request.user.save()
+        # Send notification to all stores about new order
+        send_order_notification('new_order', OrderSerializer(order).data)
 
 class OrderDetailView(generics.RetrieveAPIView):
     queryset = Order.objects.all()
@@ -142,3 +145,13 @@ class CancelOrderView(APIView):
             {"detail": "Order canceled successfully.", "order": OrderSerializer(order).data},
             status=status.HTTP_200_OK
         )
+
+class CreateOrderView(APIView):
+    def post(self, request):
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            order = serializer.save()
+            # Send notification to all stores about new order
+            send_order_notification('new_order', OrderSerializer(order).data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

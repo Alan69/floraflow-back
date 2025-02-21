@@ -55,4 +55,14 @@ class PriceNotificationConsumer(AsyncJsonWebsocketConsumer):
                 await self.channel_layer.group_discard("store_users", self.channel_name)
 
     async def send_notification(self, event):
-        await self.send_json(event["data"])
+        """
+        Send notification to WebSocket.
+        """
+        try:
+            await self.send_json({
+                "event": event["data"]["event"],
+                "order": event["data"]["order"]
+            })
+            logger.info(f"Notification sent successfully: {event['data']['event']}")
+        except Exception as e:
+            logger.error(f"Error sending notification: {str(e)}")
