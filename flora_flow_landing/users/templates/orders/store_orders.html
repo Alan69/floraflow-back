@@ -26,8 +26,18 @@
         // Create WebSocket connection using the appropriate protocol
         const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
         const socket = new WebSocket(
-            protocol + window.location.host + '/ws/notifications/'
+            protocol + window.location.host + '/ws/notifications/',
+            [], // protocols
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + '{{ request.session.access_token }}'
+                }
+            }
         );
+
+        socket.onopen = function(e) {
+            console.log('WebSocket connection established');
+        };
 
         socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
@@ -44,6 +54,15 @@
 
         socket.onclose = function(e) {
             console.error('WebSocket closed unexpectedly');
+            // Try to reconnect after 5 seconds
+            setTimeout(function() {
+                console.log('Attempting to reconnect...');
+                window.location.reload();
+            }, 5000);
+        };
+
+        socket.onerror = function(error) {
+            console.error('WebSocket error:', error);
         };
     });
 </script>
