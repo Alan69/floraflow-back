@@ -306,3 +306,44 @@ class RateStoreView(View):
         )
         
         return redirect('order_history')    
+
+class StoreOrderHistoryView(View):
+    def get(self, request):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        response = requests.get(f'{API_BASE_URL}/store/history/', headers=headers)
+        
+        if response.status_code == 200:
+            orders = response.json()
+            context = {
+                'orders': orders
+            }
+            return render(request, 'orders/store_order_history.html', context)
+        else:
+            messages.error(request, 'Ошибка при получении истории заказов')
+            return redirect('profile')    
+
+class StoreOrdersView(View):
+    def get(self, request):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        response = requests.get(f'{API_BASE_URL}/store/orders/', headers=headers)
+        
+        if response.status_code == 200:
+            orders = response.json()
+            context = {
+                'orders': orders
+            }
+            
+            # If it's an AJAX request, return only the orders list partial
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return render(request, 'orders/partials/orders_list.html', context)
+                
+            return render(request, 'orders/store_orders.html', context)
+        else:
+            messages.error(request, 'Ошибка при получении заказов')
+            return redirect('profile')

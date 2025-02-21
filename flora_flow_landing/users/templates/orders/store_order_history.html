@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<section class="store-order-history-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="order-history-content">
+                    <div class="order-header">
+                        <h2>История заказов</h2>
+                        <p class="text-muted">История выполненных заказов</p>
+                    </div>
+
+                    {% if orders %}
+                    <div class="orders-list">
+                        {% for order in orders %}
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="card-title">Заказ от {{ order.created_at|date:"d.m.Y H:i" }}</h5>
+                                        <p class="text-muted mb-2">#{{ order.uuid }}</p>
+                                        <p><strong>Клиент:</strong> {{ order.first_name }}</p>
+                                        <p><strong>Телефон:</strong> {{ order.customer_phone }}</p>
+                                        <p><strong>Цветок:</strong> {{ order.flower.text }}</p>
+                                        <p><strong>Цвет:</strong> {{ order.color.text }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Высота:</strong> {{ order.flower_height }}</p>
+                                        <p><strong>Количество:</strong> {{ order.quantity }}</p>
+                                        <p><strong>Декорация:</strong> {% if order.decoration %}Да{% else %}Нет{% endif %}</p>
+                                        <p><strong>Адрес:</strong> {{ order.recipients_address }}</p>
+                                        <p><strong>Статус:</strong> 
+                                            <span class="badge {% if order.status == 'pending' %}bg-warning
+                                                     {% elif order.status == 'accepted' %}bg-info
+                                                     {% elif order.status == 'in_transit' %}bg-primary
+                                                     {% elif order.status == 'completed' %}bg-success
+                                                     {% else %}bg-danger{% endif %}">
+                                                {{ order.get_status_display }}
+                                            </span>
+                                        </p>
+                                        {% if order.proposed_price %}
+                                        <p><strong>Предложенная цена:</strong> {{ order.proposed_price }} ₸</p>
+                                        {% endif %}
+                                        {% if order.rating %}
+                                        <p><strong>Оценка:</strong> {{ order.rating }}/5</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                {% if order.flower_data %}
+                                <div class="mt-3">
+                                    <p><strong>Дополнительная информация:</strong></p>
+                                    <p class="text-muted">{{ order.flower_data }}</p>
+                                </div>
+                                {% endif %}
+
+                                {% if order.comment %}
+                                <div class="mt-3">
+                                    <p><strong>Комментарий к заказу:</strong></p>
+                                    <p class="text-muted">{{ order.comment }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        История заказов пуста.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 
