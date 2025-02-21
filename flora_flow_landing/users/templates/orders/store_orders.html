@@ -26,7 +26,7 @@
         const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
         const token = '{{ request.session.access_token }}';
         const socket = new WebSocket(
-            protocol + window.location.host + '/ws/notifications/?token=' + token
+            protocol + 'api.floraflow.tech/ws/notifications/?token=' + token
         );
 
         socket.onopen = function(e) {
@@ -47,10 +47,7 @@
 
         socket.onclose = function(e) {
             console.error('WebSocket closed unexpectedly');
-            setTimeout(function() {
-                console.log('Attempting to reconnect...');
-                window.location.reload();
-            }, 5000);
+            console.log('Connection closed, please refresh to reconnect');
         };
 
         socket.onerror = function(error) {
