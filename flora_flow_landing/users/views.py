@@ -335,6 +335,7 @@ class StoreOrdersView(View):
         
         if response.status_code == 200:
             orders = response.json()
+            print("Orders received:", orders)  # Add logging
             context = {
                 'orders': orders
             }

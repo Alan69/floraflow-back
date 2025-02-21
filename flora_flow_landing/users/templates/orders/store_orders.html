@@ -13,7 +13,7 @@
                     </div>
 
                     <div id="orders-list" class="orders-list">
-                        {% include "orders/partials/orders_list.html" %}
+                        <!-- Orders list will be rendered here -->
                     </div>
                 </div>
             </div>
@@ -22,6 +22,17 @@
 </section>
 
 <script>
+    // Initial load of orders
+    fetch('{% url "store_orders" %}', {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.text())
+    .then(html => {
+        document.getElementById('orders-list').innerHTML = html;
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
         const token = '{{ request.session.access_token }}';
@@ -37,11 +48,15 @@
             const data = JSON.parse(e.data);
             
             if (data.event === 'new_order' || data.event === 'order_update') {
-                fetch('{% url "store_orders" %}')
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById('orders-list').innerHTML = html;
-                    });
+                fetch('{% url "store_orders" %}', {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('orders-list').innerHTML = html;
+                });
             }
         };
 
