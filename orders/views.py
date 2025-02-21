@@ -14,6 +14,7 @@ from stores.utils import send_order_notification
 class OrderCreateView(generics.CreateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
+    queryset = Order.objects.all()
 
     def perform_create(self, serializer):
         if self.request.user.current_order:
