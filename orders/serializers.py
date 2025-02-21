@@ -7,12 +7,14 @@ from common.serializers import FlowerSerializer, ColorSerializer, FlowerSerializ
 
 class OrderSerializer(serializers.ModelSerializer):
     client_name = serializers.CharField(source='client.username', read_only=True)
+    uuid = serializers.UUIDField(format='hex')  # Add explicit UUID serialization
     
     class Meta:
         model = Order
         fields = ['uuid', 'client', 'client_name', 'flower', 'color', 'flower_height', 
-                 'quantity', 'decoration', 'recipients_address', 'recipients_phone', 'flower_data']
-        read_only_fields = ['uuid', 'client', 'client_name']  # Make client field read-only
+                 'quantity', 'decoration', 'recipients_address', 'recipients_phone', 
+                 'flower_data', 'status', 'created_at']
+        read_only_fields = ['uuid', 'client', 'client_name']
 
     def create(self, validated_data):
         client = self.context['request'].user
