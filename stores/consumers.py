@@ -6,14 +6,14 @@ from channels.db import database_sync_to_async
 from urllib.parse import parse_qs
 import logging
 
-User = get_user_model()
+from users.models import CustomUser
 logger = logging.getLogger(__name__)
 
 @database_sync_to_async
 def get_user_from_token(token):
     try:
         access_token = AccessToken(token)
-        user = User.objects.get(id=access_token['user_id'])
+        user = CustomUser.objects.get(uuid=access_token['user_id'])
         return user
     except Exception as e:
         logger.error(f"Error authenticating WebSocket connection: {str(e)}")
@@ -34,11 +34,11 @@ class PriceNotificationConsumer(AsyncJsonWebsocketConsumer):
             user = await get_user_from_token(token)
             if user:
                 self.user = user
-                await self.channel_layer.group_add(f"user_{self.user.id}", self.channel_name)
+                await self.channel_layer.group_add(f"user_{self.user.uuid}", self.channel_name)
                 if self.user.user_type == 'store':
                     await self.channel_layer.group_add("store_users", self.channel_name)
                 await self.accept()
-                logger.info(f"WebSocket connection accepted for user {user.id}")
+                logger.info(f"WebSocket connection accepted for user {user.uuid}")
                 return
             
             logger.error("Invalid token or user not found")
@@ -50,7 +50,7 @@ class PriceNotificationConsumer(AsyncJsonWebsocketConsumer):
 
     async def disconnect(self, close_code):
         if hasattr(self, 'user') and self.user.is_authenticated:
-            await self.channel_layer.group_discard(f"user_{self.user.id}", self.channel_name)
+            await self.channel_layer.group_discard(f"user_{self.user.uuid}", self.channel_name)
             if self.user.user_type == 'store':
                 await self.channel_layer.group_discard("store_users", self.channel_name)
 
