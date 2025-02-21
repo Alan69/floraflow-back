@@ -3,6 +3,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth import get_user_model
 from channels.middleware import BaseMiddleware
 from channels.db import database_sync_to_async
+from urllib.parse import parse_qs
 
 User = get_user_model()
 
@@ -18,15 +19,9 @@ def get_user_from_token(token):
 class PriceNotificationConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         # Get token from query string
-        query_string = self.scope.get('query_string', b'').decode()
-        token = None
-        
-        # Try to get token from headers
-        headers = dict(self.scope['headers'])
-        auth_header = headers.get(b'authorization', b'').decode()
-        if auth_header.startswith('Bearer '):
-            token = auth_header.split(' ')[1]
-        
+        query_string = parse_qs(self.scope['query_string'].decode())
+        token = query_string.get('token', [None])[0]
+
         if token:
             user = await get_user_from_token(token)
             if user:

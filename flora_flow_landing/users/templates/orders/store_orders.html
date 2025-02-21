@@ -23,16 +23,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Create WebSocket connection using the appropriate protocol
         const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const token = '{{ request.session.access_token }}';
         const socket = new WebSocket(
-            protocol + window.location.host + '/ws/notifications/',
-            [], // protocols
-            {
-                headers: {
-                    'Authorization': 'Bearer ' + '{{ request.session.access_token }}'
-                }
-            }
+            protocol + window.location.host + '/ws/notifications/?token=' + token
         );
 
         socket.onopen = function(e) {
@@ -43,7 +37,6 @@
             const data = JSON.parse(e.data);
             
             if (data.event === 'new_order' || data.event === 'order_update') {
-                // Refresh the orders list
                 fetch('{% url "store_orders" %}')
                     .then(response => response.text())
                     .then(html => {
@@ -54,7 +47,6 @@
 
         socket.onclose = function(e) {
             console.error('WebSocket closed unexpectedly');
-            // Try to reconnect after 5 seconds
             setTimeout(function() {
                 console.log('Attempting to reconnect...');
                 window.location.reload();
