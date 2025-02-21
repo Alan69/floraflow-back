@@ -7,7 +7,7 @@ from common.serializers import FlowerSerializer, ColorSerializer, FlowerSerializ
 
 class OrderSerializer(serializers.ModelSerializer):
     client_name = serializers.CharField(source='client.username', read_only=True)
-    uuid = serializers.UUIDField(format='hex')  # Add explicit UUID serialization
+    # uuid = serializers.UUIDField(format='hex')  # Add explicit UUID serialization
     
     class Meta:
         model = Order
