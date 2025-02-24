@@ -16,6 +16,6 @@ urlpatterns = [
     path('propose-price/<uuid:order_id>/', views.ProposePriceView.as_view(), name='propose-price'),
     path('current-order/', views.CurrentOrderView.as_view(), name='current_order'),
     path('client/proposed-prices/', views.ClientProposedPricesView.as_view(), name='client_proposed_prices'),
-    path('client/accept-price/<uuid:price_id>/', views.AcceptPriceView.as_view(), name='accept_price'),
-    path('client/cancel-price/<uuid:price_id>/', views.CancelPriceView.as_view(), name='cancel_price'),
+    path('client/accept-price/<uuid:price_id>/', views.AcceptPriceView.as_view(), name='accept-price'),
+    path('client/cancel-price/<uuid:price_id>/', views.CancelPriceView.as_view(), name='cancel-price'),
 ] 
