@@ -442,6 +442,10 @@ class AcceptPriceView(View):
             f'{API_BASE_URL}/client/prices/{price_id}/accept/',
             headers=headers
         )
+        if response.status_code == 200:
+            messages.success(request, 'Цена успешно принята')
+        else:
+            messages.error(request, 'Ошибка при принятии цены')
         return redirect('current_order')
 
 class CancelPriceView(View):
@@ -454,4 +458,8 @@ class CancelPriceView(View):
             f'{API_BASE_URL}/client/prices/{price_id}/cancel/',
             headers=headers
         )
+        if response.status_code == 200:
+            messages.success(request, 'Цена успешно отменена')
+        else:
+            messages.error(request, 'Ошибка при отмене цены')
         return redirect('current_order')
