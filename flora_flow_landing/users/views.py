@@ -307,18 +307,42 @@ class OrderHistoryView(View):
             return redirect('profile') 
         
 class RateStoreView(View):
-    def post(self, request, order_uuid):
+    def post(self, request, uuid):
         if not request.session.get('access_token'):
             return redirect('login')
             
         headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
-        response = requests.post(
-            f'{API_BASE_URL}/client/order/{order_uuid}/rate/',
+        rating = request.POST.get('rating')
+        
+        if not rating:
+            messages.error(request, 'Пожалуйста, укажите рейтинг')
+            return redirect('order_history')
+        
+        try:
+            rating = int(rating)
+            if not 1 <= rating <= 5:
+                raise ValueError()
+        except ValueError:
+            messages.error(request, 'Рейтинг должен быть числом от 1 до 5')
+            return redirect('order_history')
+        
+        response = requests.patch(
+            f'{API_BASE_URL}/client/order/{uuid}/rate/',
             headers=headers,
-            json={'rating': request.POST.get('rating')}
+            json={'rating': rating}
         )
         
-        return redirect('order_history')    
+        if response.status_code == 200:
+            messages.success(request, 'Спасибо за вашу оценку!')
+        else:
+            try:
+                error_data = response.json()
+                error_message = error_data.get('error', 'Ошибка при сохранении оценки')
+                messages.error(request, error_message)
+            except:
+                messages.error(request, 'Ошибка при сохранении оценки')
+        
+        return redirect('order_history')
 
 class StoreOrderHistoryView(View):
     def get(self, request):

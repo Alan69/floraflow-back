@@ -89,13 +89,43 @@
                                 </div>
                                 {% endif %}
 
-                                {% comment %} <div class="mt-3 text-end">
-                                    {% if order.status == 'completed' and not order.rating %}
+                                {% if order.status == 'completed' and not order.rating %}
+                                <div class="mt-3 text-end">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rateModal{{ order.uuid }}">
                                         <i class="fas fa-star me-2"></i>Оценить
                                     </button>
-                                    {% endif %}
-                                </div> {% endcomment %}
+                                </div>
+
+                                <!-- Rating Modal -->
+                                <div class="modal fade" id="rateModal{{ order.uuid }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form method="POST" action="{% url 'rate-store' order.uuid %}">
+                                                {% csrf_token %}
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Оценить заказ</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Рейтинг</label>
+                                                        <div class="rating">
+                                                            {% for i in "12345"|make_list|reverse %}
+                                                            <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}{{ order.uuid }}" required>
+                                                            <label for="star{{ i }}{{ order.uuid }}"><i class="fas fa-star"></i></label>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                                    <button type="submit" class="btn btn-primary">Отправить оценку</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}

@@ -19,4 +19,5 @@ urlpatterns = [
     path('client/accept-price/<uuid:price_id>/', views.AcceptPriceView.as_view(), name='accept-price'),
     path('client/cancel-price/<uuid:price_id>/', views.CancelPriceView.as_view(), name='cancel-price'),
     path('store/order-status/<uuid:order_uuid>/', views.StoreOrderStatusUpdateView.as_view(), name='store_order_status'),
+    path('rate-store/<uuid:uuid>/', views.RateStoreView.as_view(), name='rate-store'),
 ] 
