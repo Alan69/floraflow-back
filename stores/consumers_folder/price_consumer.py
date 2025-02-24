@@ -1,9 +1,8 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from channels.db import database_sync_to_async
-from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import AccessToken
-from orders.models import Order
+from users.models import CustomUser
 
 class PriceConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -53,8 +52,7 @@ class PriceConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_user(self, user_id):
-        User = get_user_model()
         try:
-            return User.objects.get(id=user_id)
-        except User.DoesNotExist:
+            return CustomUser.objects.get(uuid=user_id)
+        except CustomUser.DoesNotExist:
             return None 

@@ -112,7 +112,15 @@
         };
 
         socket.onclose = function(e) {
-            console.error('WebSocket closed unexpectedly');
+            if (e.wasClean) {
+                console.log(`Connection closed cleanly, code=${e.code} reason=${e.reason}`);
+            } else {
+                console.error('Connection died');
+                // Try to reconnect after 5 seconds
+                setTimeout(() => {
+                    window.location.reload();
+                }, 5000);
+            }
         };
 
         socket.onerror = function(error) {
