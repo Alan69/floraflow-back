@@ -463,3 +463,36 @@ class CancelPriceView(View):
         else:
             messages.error(request, 'Ошибка при отмене цены')
         return redirect('current_order')
+
+class StoreOrderStatusUpdateView(View):
+    def post(self, request, order_uuid):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        
+        # Get the new status from form data
+        new_status = request.POST.get('status')
+        
+        if not new_status:
+            messages.error(request, 'Статус не указан')
+            return redirect('store_order_history')
+        
+        # Send PATCH request to update order status
+        response = requests.patch(
+            f'{API_BASE_URL}/store/order-status/{order_uuid}/',
+            headers=headers,
+            json={'status': new_status}
+        )
+        
+        if response.status_code == 200:
+            messages.success(request, 'Статус заказа успешно обновлен')
+        else:
+            try:
+                error_data = response.json()
+                error_message = error_data.get('error', 'Ошибка при обновлении статуса заказа')
+                messages.error(request, error_message)
+            except:
+                messages.error(request, 'Ошибка при обновлении статуса заказа')
+        
+        return redirect('store_order_history')
