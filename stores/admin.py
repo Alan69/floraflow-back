@@ -26,7 +26,7 @@ class PriceAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('uuid', 'order', 'store', 'proposed_price', 'is_accepted', 'created_at', 'updated_at', 'expires_at')
+            'fields': ('order', 'store', 'proposed_price', 'flower_img', 'comment', 'is_accepted')
         }),
     )
 
