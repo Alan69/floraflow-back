@@ -110,7 +110,7 @@
                                                     <div class="mb-3">
                                                         <label class="form-label">Рейтинг</label>
                                                         <div class="rating">
-                                                            {% for i in "12345"|make_list|reverse %}
+                                                            {% for i in "54321"|make_list %}
                                                             <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}{{ order.uuid }}" required>
                                                             <label for="star{{ i }}{{ order.uuid }}"><i class="fas fa-star"></i></label>
                                                             {% endfor %}
