@@ -126,6 +126,12 @@
                                     </div>
                                 </div>
                                 {% endif %}
+                                {% if order.status == 'canceled' %}
+                                <div class="mt-3 text-end">
+                                    <p class="text-muted">Заказ отменен</p>
+                                    <p class="text-muted">Причина: {{ order.reason }}</p>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}
