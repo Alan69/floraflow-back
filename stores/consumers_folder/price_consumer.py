@@ -6,53 +6,62 @@ from users.models import CustomUser
 
 class PriceConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        # Get token from query string
-        token = self.scope['query_string'].decode().split('token=')[1]
-        
         try:
-            # Verify token and get user
-            access_token = AccessToken(token)
-            user_id = access_token['user_id']
-            self.user = await self.get_user(user_id)
+            # Get token from query string
+            query_string = self.scope['query_string'].decode()
+            token = query_string.split('token=')[1] if 'token=' in query_string else None
             
-            if not self.user:
+            if not token:
                 await self.close()
                 return
-                
-            # Add to price group for the user's current order
-            if self.user.current_order:
-                self.order_group_name = f'order_{self.user.current_order.uuid}'
+
+            # Verify token and get user
+            user = await self.get_user_from_token(token)
+            if not user:
+                await self.close()
+                return
+
+            self.user = user
+            self.order = await self.get_current_order(user)
+            
+            if self.order:
+                self.group_name = f'order_{self.order.uuid}'
                 await self.channel_layer.group_add(
-                    self.order_group_name,
+                    self.group_name,
                     self.channel_name
                 )
-                
+            
             await self.accept()
             
         except Exception as e:
-            print(f"WebSocket connection error: {e}")
+            print(f"WebSocket connection error: {str(e)}")
             await self.close()
 
     async def disconnect(self, close_code):
-        if hasattr(self, 'order_group_name'):
+        if hasattr(self, 'group_name'):
             await self.channel_layer.group_discard(
-                self.order_group_name,
+                self.group_name,
                 self.channel_name
             )
 
     async def receive(self, text_data):
-        pass  # We don't need to handle incoming messages for this consumer
+        pass
 
     async def price_update(self, event):
-        # Send price update to WebSocket
         await self.send(text_data=json.dumps({
             'event': event['event'],
             'price': event['price']
         }))
 
     @database_sync_to_async
-    def get_user(self, user_id):
+    def get_user_from_token(self, token):
         try:
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
             return CustomUser.objects.get(uuid=user_id)
-        except CustomUser.DoesNotExist:
-            return None 
+        except Exception:
+            return None
+
+    @database_sync_to_async
+    def get_current_order(self, user):
+        return getattr(user, 'current_order', None) 
