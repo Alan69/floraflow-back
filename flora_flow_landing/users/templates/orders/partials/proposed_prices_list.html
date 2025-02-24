@@ -11,13 +11,13 @@
                     {% endif %}
                 </div>
                 <div class="col-md-6 text-end">
-                    <form method="POST" action="{% url 'accept_price' price.uuid %}" style="display: inline;">
+                    <form method="POST" action="{% url 'accept-price' price.uuid %}" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-success">
                             <i class="fas fa-check me-2"></i>Принять
                         </button>
                     </form>
-                    <form method="POST" action="{% url 'cancel_price' price.uuid %}" style="display: inline;">
+                    <form method="POST" action="{% url 'cancel-price' price.uuid %}" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">
                             <i class="fas fa-times me-2"></i>Отклонить

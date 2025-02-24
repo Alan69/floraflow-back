@@ -431,3 +431,27 @@ class ClientProposedPricesView(View):
         else:
             messages.error(request, 'Ошибка при получении предложений')
             return redirect('current_order')
+
+class AcceptPriceView(View):
+    def post(self, request, price_id):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        response = requests.post(
+            f'{API_BASE_URL}/client/accept-price/{price_id}/',
+            headers=headers
+        )
+        return redirect('current_order')
+
+class CancelPriceView(View):
+    def post(self, request, price_id):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        response = requests.post(
+            f'{API_BASE_URL}/client/cancel-price/{price_id}/',
+            headers=headers
+        )
+        return redirect('current_order')
