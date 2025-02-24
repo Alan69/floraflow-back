@@ -439,7 +439,7 @@ class AcceptPriceView(View):
             
         headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
         response = requests.post(
-            f'{API_BASE_URL}/client/accept-price/{price_id}/',
+            f'{API_BASE_URL}/client/prices/{price_id}/accept/',
             headers=headers
         )
         return redirect('current_order')
@@ -451,7 +451,7 @@ class CancelPriceView(View):
             
         headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
         response = requests.post(
-            f'{API_BASE_URL}/client/cancel-price/{price_id}/',
+            f'{API_BASE_URL}/client/prices/{price_id}/cancel/',
             headers=headers
         )
         return redirect('current_order')
