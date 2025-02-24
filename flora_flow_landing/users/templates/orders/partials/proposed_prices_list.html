@@ -1,0 +1,35 @@
+{% if prices %}
+    {% for price in prices %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>{{ price.store.store_profile.name }}</h5>
+                    <p><strong>Предложенная цена:</strong> {{ price.proposed_price }} ₸</p>
+                    {% if price.comment %}
+                        <p><strong>Комментарий:</strong> {{ price.comment }}</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 text-end">
+                    <form method="POST" action="{% url 'accept_price' price.uuid %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check me-2"></i>Принять
+                        </button>
+                    </form>
+                    <form method="POST" action="{% url 'cancel_price' price.uuid %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-times me-2"></i>Отклонить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">
+        Пока нет предложений от магазинов.
+    </div>
+{% endif %} 

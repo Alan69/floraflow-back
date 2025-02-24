@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<section class="current-order-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="current-order-content">
+                    <div class="order-header">
+                        <h2>Текущий заказ</h2>
+                        <p class="text-muted">Информация о вашем текущем заказе</p>
+                    </div>
+
+                    {% if user.current_order %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Цветок:</strong> {{ user.current_order.flower.name }}</p>
+                                    <p><strong>Цвет:</strong> {{ user.current_order.color.text }}</p>
+                                    <p><strong>Высота:</strong> {{ user.current_order.flower_height }}</p>
+                                    <p><strong>Количество:</strong> {{ user.current_order.quantity }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Декорация:</strong> {% if user.current_order.decoration %}Да{% else %}Нет{% endif %}</p>
+                                    <p><strong>Адрес доставки:</strong> {{ user.current_order.recipients_address }}</p>
+                                    <p><strong>Телефон получателя:</strong> {{ user.current_order.recipients_phone }}</p>
+                                    <p><strong>Статус:</strong> 
+                                        <span class="badge {% if user.current_order.status == 'pending' %}bg-warning
+                                                     {% elif user.current_order.status == 'accepted' %}bg-info
+                                                     {% elif user.current_order.status == 'in_transit' %}bg-primary
+                                                     {% elif user.current_order.status == 'completed' %}bg-success
+                                                     {% else %}bg-danger{% endif %}">
+                                            {% if user.current_order.status == 'pending' %}Ожидает
+                                            {% elif user.current_order.status == 'accepted' %}Принят
+                                            {% elif user.current_order.status == 'in_transit' %}В пути
+                                            {% elif user.current_order.status == 'completed' %}Выполнен
+                                            {% else %}Отменён{% endif %}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            {% if user.current_order.flower_data %}
+                            <div class="mt-3">
+                                <p><strong>Дополнительная информация:</strong></p>
+                                <p class="text-muted">{{ user.current_order.flower_data }}</p>
+                            </div>
+                            {% endif %}
+                            {% if user.current_order.status == 'pending' %}
+                            <div class="mt-3 text-end">
+                                <form method="POST" action="{% url 'cancel_order' user.current_order.uuid %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-times me-2"></i>Отменить заказ
+                                    </button>
+                                </form>
+                            </div>
+                            {% endif %}
+
+                            <!-- Add this new section for proposed prices -->
+                            <div class="proposed-prices mt-4">
+                                <h4>Предложения от магазинов</h4>
+                                <div id="proposed-prices-list">
+                                    <!-- Prices will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        У вас нет текущего заказа. <a href="{% url 'create_order' %}">Создать заказ</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const token = '{{ request.session.access_token }}';
+        const socket = new WebSocket(
+            protocol + 'api.floraflow.tech/ws/prices/?token=' + token
+        );
+
+        function loadProposedPrices() {
+            fetch('{% url "client_proposed_prices" %}', {
+                headers: {
+                    'Authorization': 'Bearer {{ request.session.access_token }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('proposed-prices-list').innerHTML = html;
+            });
+        }
+
+        socket.onopen = function(e) {
+            console.log('WebSocket connection established');
+            loadProposedPrices(); // Initial load
+        };
+
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            if (data.event === 'new_price' || data.event === 'price_update') {
+                loadProposedPrices(); // Reload prices when new proposal received
+            }
+        };
+
+        socket.onclose = function(e) {
+            console.error('WebSocket closed unexpectedly');
+        };
+
+        socket.onerror = function(error) {
+            console.error('WebSocket error:', error);
+        };
+    });
+</script>
+{% endblock %} 

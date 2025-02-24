@@ -9,6 +9,10 @@
                     <p><strong>Цветок:</strong> {{ order.flower.text }}</p>
                     <p><strong>Цвет:</strong> {{ order.color.text }}</p>
                     <p><strong>Высота:</strong> {{ order.flower_height }}</p>
+                    <p><strong>Количество:</strong> {{ order.quantity }}</p>
+                    <p><strong>Декор:</strong> {{ order.decoration.text }}</p>
+                    <p><strong>Адрес доставки:</strong> {{ order.recipients_address }}</p>
+                    <p><strong>Комментарий:</strong> {{ order.flower_data }}</p>
                 </div>
                 <div class="col-md-6">
                     <form method="POST" action="{% url 'propose-price' order.uuid %}" class="propose-price-form">
@@ -16,6 +20,9 @@
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <input type="number" name="proposed_price" class="form-control" placeholder="Предложить цену" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="file" name="flower_img" class="form-control" placeholder="Изображение">
                             </div>
                             <div class="col-md-6">
                                 <input type="text" name="comment" class="form-control" placeholder="Комментарий к предложению">

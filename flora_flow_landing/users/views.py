@@ -136,6 +136,11 @@ class ProfileView(View):
         )
         
         if response.status_code == 200:
+            # Update the session user data with the new information
+            user_response = requests.get(f'{API_BASE_URL}/me/', headers=headers)
+            if user_response.status_code == 200:
+                request.session['user_data'] = user_response.json()
+            
             messages.success(request, 'Профиль успешно обновлен')
             # If user type changed to store, redirect to store profile
             if data['user_type'] == 'store':
@@ -365,6 +370,7 @@ class ProposePriceView(View):
         headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
         data = {
             'proposed_price': request.POST.get('proposed_price'),
+            'flower_img': request.FILES.get('flower_img'),
             'comment': request.POST.get('comment')
         }
         
@@ -385,3 +391,43 @@ class ProposePriceView(View):
                 messages.error(request, 'Ошибка при предложении цены')
         
         return redirect('store_orders')
+
+class CurrentOrderView(View):
+    def get(self, request):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        response = requests.get(f'{API_BASE_URL}/me/', headers=headers)
+        
+        if response.status_code == 200:
+            user_data = response.json()
+            context = {
+                'user': user_data
+            }
+            return render(request, 'orders/current_order.html', context)
+        else:
+            messages.error(request, 'Ошибка при получении данных заказа')
+            return redirect('profile')
+
+class ClientProposedPricesView(View):
+    def get(self, request):
+        if not request.session.get('access_token'):
+            return redirect('login')
+            
+        headers = {'Authorization': f'Bearer {request.session["access_token"]}'}
+        response = requests.get(f'{API_BASE_URL}/client/proposed-prices/', headers=headers)
+        
+        if response.status_code == 200:
+            prices = response.json()
+            context = {
+                'prices': prices
+            }
+            
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return render(request, 'orders/partials/proposed_prices_list.html', context)
+                
+            return render(request, 'orders/proposed_prices.html', context)
+        else:
+            messages.error(request, 'Ошибка при получении предложений')
+            return redirect('current_order')

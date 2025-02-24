@@ -14,6 +14,7 @@ from orders.serializers import OrderSerializer, OrderStoreHistorySerializer
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from .utils import send_price_notification
 
 # Endpoint to view client orders
 class StoreOrdersView(generics.ListAPIView):
@@ -63,7 +64,13 @@ class StoreOrderUpdateView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         price = serializer.save()
 
-        # Return the created price using the display serializer
+        # Send WebSocket notification
+        send_price_notification(
+            'new_price',
+            str(order.uuid),
+            PriceSerializer(price).data
+        )
+
         return Response(
             {
                 "detail": "Цена успешно предложена.",

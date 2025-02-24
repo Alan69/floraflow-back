@@ -33,3 +33,14 @@ def send_order_notification(event_type, order_data):
         logger.info("Notification sent successfully")
     except Exception as e:
         logger.error(f"Error sending notification: {str(e)}") 
+
+def send_price_notification(event_type, order_uuid, price_data):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f'order_{order_uuid}',
+        {
+            'type': 'price_update',
+            'event': event_type,
+            'price': price_data
+        }
+    ) 
