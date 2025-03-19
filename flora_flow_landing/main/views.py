@@ -12,6 +12,12 @@ def index(request):
     }
     return render(request, "main/index.html", data)
 
+def privacy_policy(request):
+    data = {
+        'title': 'Политика конфиденциальности',
+    }
+    return render(request, "main/privacy_policy.html", data)
+
 @csrf_exempt
 def send_to_telegram(request):
     if request.method == 'POST':

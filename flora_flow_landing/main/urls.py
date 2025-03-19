@@ -5,4 +5,5 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path('send-to-telegram/', views.send_to_telegram, name='send_to_telegram'),
+    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
 ]
