@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<section class="contact-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="text-center mb-5">Связаться с нами</h1>
+        
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="contact-form">
+              <h4>Отправить сообщение</h4>
+              <p>Заполните форму ниже, и мы свяжемся с вами в ближайшее время.</p>
+              
+              <form role="form" id="contact-form" method="post" action="{% url 'send_support_message' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label for="fullName" class="form-label">ФИО</label>
+                  <input type="text" class="form-control" id="fullName" name="fullName" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="contactInfo" class="form-label">Почта или телефон</label>
+                  <input type="text" class="form-control" id="contactInfo" name="contactInfo" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="message" class="form-label">Текст сообщения</label>
+                  <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">Отправить сообщение</button>
+              </form>
+            </div>
+          </div>
+          
+          <div class="col-lg-6">
+            <div class="contact-info">
+              <h4>Наши контакты</h4>
+              <p>Вы можете связаться с нами любым удобным для вас способом:</p>
+              
+              <div class="contact-item">
+                <i class="fas fa-phone-alt"></i>
+                <div>
+                  <h5>Телефон</h5>
+                  <p><a href="tel:+77058288437">+7-705-828-84-37</a></p>
+                </div>
+              </div>
+              
+              <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <div>
+                  <h5>Электронная почта</h5>
+                  <p><a href="mailto:support@floraflow.tech">support@floraflow.tech</a></p>
+                </div>
+              </div>
+              
+              <div class="mt-5">
+                <h4>О нас</h4>
+                <p>Flora Flow - инновационное мобильное приложение для выгодной покупки и продажи цветов. Мы стремимся создать удобную платформу, которая объединяет покупателей и продавцов цветов, обеспечивая лучшие цены и качество обслуживания.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-section {
+    padding: 60px 0;
+  }
+  
+  .contact-form, .contact-info {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    height: 100%;
+  }
+  
+  .contact-info {
+    background-color: #f8f9fa;
+  }
+  
+  h4 {
+    color: #FF7BAC;
+    margin-bottom: 20px;
+  }
+  
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  
+  .contact-item i {
+    color: #FF7BAC;
+    font-size: 20px;
+    margin-right: 15px;
+    margin-top: 5px;
+  }
+  
+  .contact-item h5 {
+    margin-bottom: 5px;
+    font-size: 16px;
+  }
+  
+  .contact-item p {
+    margin: 0;
+  }
+  
+  .contact-item a {
+    color: #212529;
+    text-decoration: none;
+  }
+  
+  .contact-item a:hover {
+    color: #FF7BAC;
+  }
+  
+  .btn-primary {
+    background-color: #FF7BAC;
+    border-color: #FF7BAC;
+  }
+  
+  .btn-primary:hover {
+    background-color: #ff5a96;
+    border-color: #ff5a96;
+  }
+</style>
+{% endblock %} 

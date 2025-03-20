@@ -18,6 +18,49 @@ def privacy_policy(request):
     }
     return render(request, "main/privacy_policy.html", data)
 
+def contact(request):
+    data = {
+        'title': 'Связаться с нами',
+    }
+    return render(request, "main/contact.html", data)
+
+@csrf_exempt
+def send_support_message(request):
+    if request.method == 'POST':
+        full_name = request.POST.get('fullName')
+        contact_info = request.POST.get('contactInfo')
+        message = request.POST.get('message')
+
+        # Construct the message for Telegram
+        telegram_message = f"📩 SUPPORT MESSAGE\n\n👤 ФИО: {full_name}\n📞 Контакт: {contact_info}\n\n💬 Сообщение:\n{message}"
+
+        # Send the message to Telegram
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        payload = {
+            'chat_id': TELEGRAM_CHAT_ID,
+            'text': telegram_message
+        }
+        response = requests.post(url, data=payload)
+
+        if response.status_code == 200:
+            # Render a success page
+            return render(request, 'main/success.html', {
+                'message': 'Ваше сообщение успешно отправлено!',
+                'details': 'Мы обработаем ваш запрос и свяжемся с вами в ближайшее время. Спасибо за обращение.'
+            })
+        else:
+            # Render an error page
+            return render(request, 'main/error.html', {
+                'message': 'Ошибка при отправке сообщения.',
+                'details': 'Пожалуйста, попробуйте снова позже или свяжитесь с нами по указанным контактам.'
+            })
+
+    # Render an error page for invalid request methods
+    return render(request, 'main/error.html', {
+        'message': 'Недопустимый метод запроса.',
+        'details': 'Пожалуйста, используйте форму на нашем сайте для отправки сообщения.'
+    })
+
 @csrf_exempt
 def send_to_telegram(request):
     if request.method == 'POST':
